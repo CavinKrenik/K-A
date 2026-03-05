@@ -1082,7 +1082,7 @@ export default function WeddingSite() {
             marginBottom: "28px",
             animation: "fadeUp 1s ease 0.2s both",
           }}>
-            Together with their families
+            Join us
           </p>
 
           <h1 className="hero-names">
@@ -1099,7 +1099,18 @@ export default function WeddingSite() {
           }} />
 
           <p className="hero-date">
-            June 6th, 2026 · Starts at Noon
+            June 6th, 2026
+          </p>
+          <p style={{
+            fontFamily: "'DM Sans', sans-serif",
+            fontSize: "10px",
+            letterSpacing: "0.28em",
+            textTransform: "uppercase",
+            color: "#9f8a7a",
+            marginTop: "8px",
+            animation: "fadeUp 1s ease 0.6s both",
+          }}>
+            Ceremony begins at noon
           </p>
         </div>
 
