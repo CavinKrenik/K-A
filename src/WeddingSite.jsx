@@ -1071,9 +1071,9 @@ export default function WeddingSite() {
           </p>
 
           <h1 className="hero-names">
-            <em className="hero-kyle">Kyle</em>
+            <em className="hero-kyle">Kyle Hollenbaugh</em>
             <span className="hero-amp">&amp;</span>
-            <em className="hero-amber">Amber</em>
+            <em className="hero-amber">Amber Rivera</em>
           </h1>
 
           <div style={{
@@ -1153,10 +1153,10 @@ export default function WeddingSite() {
               fontWeight: 400,
               marginTop: "6px",
             }}>
-              Kyle{" "}
+              Kyle Hollenbaugh{" "}
               <a href="tel:+13607632293" style={{ color: "inherit", textDecoration: "none" }}>(360) 763-2293</a>
               <span style={{ margin: "0 14px", color: "#c8b8a2" }}>·</span>
-              Amber{" "}
+              Amber Rivera{" "}
               <a href="tel:+13609952926" style={{ color: "inherit", textDecoration: "none" }}>(360) 995-2926</a>
             </p>
           </div>
