@@ -638,7 +638,7 @@ function NavBar({ scrollY, onRsvpClick }) {
           letterSpacing: "0.04em",
           transition: "color 0.3s",
         }}>
-          Kyle &amp; Amber
+          June 6, 2026
         </span>
 
         {/* Desktop links */}
@@ -646,6 +646,7 @@ function NavBar({ scrollY, onRsvpClick }) {
           {["Details", "Gallery"].map((s) => (
             <a key={s} href={`#${s.toLowerCase()}`} style={link}>{s}</a>
           ))}
+          <a key="Registry" href="https://www.target.com/gift-registry/gift-giver?registryId=3db2c510-174e-11f1-8c28-17903ce32dc5&type=WEDDING" target="_blank" rel="noopener noreferrer" style={link}>Registry</a>
           <a key="RSVP" href="#" onClick={(e) => { e.preventDefault(); onRsvpClick(); }} style={link}>RSVP</a>
         </div>
 
@@ -678,13 +679,27 @@ function NavBar({ scrollY, onRsvpClick }) {
           </a>
         ))}
         <a
+          key="Registry"
+          href="https://www.target.com/gift-registry/gift-giver?registryId=3db2c510-174e-11f1-8c28-17903ce32dc5&type=WEDDING"
+          target="_blank"
+          rel="noopener noreferrer"
+          onClick={() => setMenuOpen(false)}
+          style={{
+            opacity: menuOpen ? 1 : 0,
+            transform: menuOpen ? "translateY(0)" : "translateY(14px)",
+            transition: `opacity 0.35s ease ${0.08 + 2 * 0.07}s, transform 0.35s ease ${0.08 + 2 * 0.07}s`,
+          }}
+        >
+          Registry
+        </a>
+        <a
           key="RSVP"
           href="#"
           onClick={(e) => { e.preventDefault(); setMenuOpen(false); onRsvpClick(); }}
           style={{
             opacity: menuOpen ? 1 : 0,
             transform: menuOpen ? "translateY(0)" : "translateY(14px)",
-            transition: `opacity 0.35s ease ${0.08 + 2 * 0.07}s, transform 0.35s ease ${0.08 + 2 * 0.07}s`,
+            transition: `opacity 0.35s ease ${0.08 + 3 * 0.07}s, transform 0.35s ease ${0.08 + 3 * 0.07}s`,
           }}
         >
           RSVP
