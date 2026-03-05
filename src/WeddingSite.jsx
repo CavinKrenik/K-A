@@ -242,11 +242,11 @@ const CSS = `
   .hero-names {
     font-family: 'Playfair Display', 'Times New Roman', serif;
     font-weight: 500;
-    font-size: clamp(42px, 12vw, 120px);
-    line-height: 1.03;
+    font-size: clamp(36px, 9vw, 100px);
+    line-height: 1.1;
     letter-spacing: 0.02em;
     color: var(--ink);
-    width: min(84vw, 740px);
+    white-space: nowrap;
     position: relative;
     display: grid;
     grid-template-columns: 1fr;
@@ -258,8 +258,7 @@ const CSS = `
     width: 100%;
     font-family: 'Playfair Display', 'Times New Roman', serif;
     text-align: center;
-    padding-right: 0;
-    margin-bottom: 0.02em;
+    margin-bottom: 0.06em;
     position: relative;
     z-index: 1;
     font-style: normal;
@@ -270,29 +269,18 @@ const CSS = `
     width: 100%;
     font-family: 'Playfair Display', 'Times New Roman', serif;
     text-align: center;
-    padding-left: 0;
     margin-top: 0.02em;
     position: relative;
     z-index: 1;
     font-style: normal;
     animation: amberSweep 1.15s cubic-bezier(.22,.8,.24,1) 0.48s both;
   }
-  .hero-amp {
-    display: block;
-    font-family: 'Playfair Display', 'Times New Roman', serif;
+  .hero-amber .hero-amp {
     font-style: italic;
     font-weight: 400;
-    font-size: 0.28em;
-    letter-spacing: 0.12em;
-    text-indent: 0.12em;
     color: var(--dusty-rose);
     opacity: 0.6;
-    margin: 0.08em 0;
-    text-align: center;
-    line-height: 0.9;
-    position: relative;
-    z-index: 2;
-    animation: heroFloatIn 0.8s cubic-bezier(.22,.78,.24,1) 0.28s both;
+    margin-right: 0.12em;
   }
   .hero-date {
     font-family: 'DM Sans', sans-serif;
@@ -304,10 +292,9 @@ const CSS = `
     animation: heroFloatIn 1s ease 0.76s both;
   }
   @media (max-width: 480px) {
-    .hero-names { line-height: 1.08; letter-spacing: 0.03em; }
-    .hero-kyle { padding-right: 0; margin-bottom: 0; }
-    .hero-amber { padding-left: 0; margin-top: 0; }
-    .hero-amp { font-size: 0.26em; letter-spacing: 0.1em; text-indent: 0.1em; margin: 0.06em 0; }
+    .hero-names { line-height: 1.12; letter-spacing: 0.03em; font-size: clamp(30px, 9vw, 100px); }
+    .hero-kyle { margin-bottom: 0; }
+    .hero-amber { margin-top: 0; }
   }
   .letterbox {
     position: absolute;
@@ -1079,8 +1066,7 @@ export default function WeddingSite() {
 
           <h1 className="hero-names">
             <em className="hero-kyle">Kyle Hollenbaugh</em>
-            <span className="hero-amp">&amp;</span>
-            <em className="hero-amber">Amber Rivera</em>
+            <em className="hero-amber"><span className="hero-amp">&amp;</span> Amber Rivera</em>
           </h1>
 
           <div style={{
