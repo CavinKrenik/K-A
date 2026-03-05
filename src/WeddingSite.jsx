@@ -1146,19 +1146,25 @@ export default function WeddingSite() {
             paddingRight: "28px",
           }}>
             <p style={detail}>Contact</p>
-            <p style={{
+            <div style={{
               fontFamily: "'Playfair Display', serif",
               fontSize: "clamp(15px, 2.2vw, 18px)",
               color: "#6b5d52",
               fontWeight: 400,
               marginTop: "6px",
+              display: "flex",
+              flexDirection: "column",
+              gap: "6px",
             }}>
-              Kyle Hollenbaugh{" "}
-              <a href="tel:+13607632293" style={{ color: "inherit", textDecoration: "none" }}>(360) 763-2293</a>
-              <span style={{ margin: "0 14px", color: "#c8b8a2" }}>·</span>
-              Amber Rivera{" "}
-              <a href="tel:+13609952926" style={{ color: "inherit", textDecoration: "none" }}>(360) 995-2926</a>
-            </p>
+              <span>
+                Kyle Hollenbaugh{" "}
+                <a href="tel:+13607632293" style={{ color: "inherit", textDecoration: "none" }}>(360) 763-2293</a>
+              </span>
+              <span>
+                Amber Rivera{" "}
+                <a href="tel:+13609952926" style={{ color: "inherit", textDecoration: "none" }}>(360) 995-2926</a>
+              </span>
+            </div>
           </div>
         </div>
       </section>
