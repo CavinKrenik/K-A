@@ -78,7 +78,15 @@ function useInView(threshold = 0.12) {
    GLOBAL STYLES  (mobile-first, then ≥640 tablet, ≥1024 desktop)
 ══════════════════════════════════════════════════════════════════ */
 const CSS = `
-  @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=Playfair+Display:ital,wght@0,400;0,500;0,700;1,400;1,500&display=swap');
+
+  :root {
+    --champagne: #f6f1ea;
+    --ink: #241d19;
+    --dusty-rose: #b99793;
+    --sage: #7d8b77;
+    --muted: #7a685a;
+  }
 
   *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -89,8 +97,9 @@ const CSS = `
   }
 
   body {
-    background: #f5f0eb;
+    background: var(--champagne);
     overscroll-behavior-y: none;
+    overflow-x: hidden;
   }
 
   /* ── Prevent iOS zoom on input focus ── */
@@ -110,6 +119,18 @@ const CSS = `
   @keyframes chevron {
     0%, 100% { transform: translateX(-50%) translateY(0);   opacity: 0.6; }
     50%       { transform: translateX(-50%) translateY(10px); opacity: 1;   }
+  }
+  @keyframes heroFloatIn {
+    from { opacity: 0; transform: translateY(14px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes kyleSweep {
+    from { opacity: 0; transform: translateX(42%); }
+    to   { opacity: 1; transform: translateX(0); }
+  }
+  @keyframes amberSweep {
+    from { opacity: 0; transform: translateX(-42%); }
+    to   { opacity: 1; transform: translateX(0); }
   }
   @keyframes grain {
     0%   { transform: translate(0%,    0%); }
@@ -137,18 +158,77 @@ const CSS = `
     align-items: center;
     justify-content: space-between;
     padding: 14px 20px;
-    transition: background 0.4s, backdrop-filter 0.4s, border-color 0.4s;
-  }
-  .nav.scrolled {
     background: rgba(245,240,235,0.93);
     backdrop-filter: blur(14px);
     -webkit-backdrop-filter: blur(14px);
     border-bottom: 1px solid rgba(200,184,162,0.35);
   }
+
+  /* Desktop links */
   .nav-links { display: none; gap: 28px; }
-  @media (min-width: 640px) {
+  .nav-links a:hover { color: #1a1a1a !important; }
+
+  /* Hamburger button — mobile only */
+  .nav-hamburger {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 5px;
+    cursor: pointer;
+    background: none;
+    border: none;
+    padding: 8px;
+    z-index: 201;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+  }
+  .nav-hamburger span {
+    display: block;
+    width: 22px;
+    height: 1.5px;
+    border-radius: 1px;
+    transition: transform 0.3s ease, opacity 0.3s ease;
+  }
+  .nav-hamburger.open span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+  .nav-hamburger.open span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+  .nav-hamburger.open span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
+
+  /* Full-screen mobile menu */
+  .mobile-menu {
+    position: fixed;
+    inset: 0;
+    z-index: 199;
+    background: rgba(245,240,235,0.97);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+  }
+  .mobile-menu.open { opacity: 1; pointer-events: auto; }
+  .mobile-menu a {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(40px, 11vw, 58px);
+    font-style: italic;
+    font-weight: 400;
+    color: #1a1a1a;
+    text-decoration: none;
+    letter-spacing: 0.03em;
+    padding: 10px 0;
+    transition: color 0.2s;
+  }
+  .mobile-menu a:hover { color: #9a8878; }
+
+  @media (min-width: 768px) {
     .nav { padding: 18px 40px; }
     .nav-links { display: flex; }
+    .nav-hamburger { display: none; }
+    .mobile-menu { display: none !important; }
   }
 
   /* ── Hero ── */
@@ -166,30 +246,72 @@ const CSS = `
     overflow: hidden;
   }
   .hero-names {
-    font-family: 'Cormorant Garamond', serif;
-    font-weight: 300;
-    font-size: clamp(52px, 14vw, 120px);
-    line-height: 0.92;
-    color: #1a1a1a;
-    animation: fadeUp 1.1s ease 0.35s both;
+    font-family: 'Playfair Display', 'Times New Roman', serif;
+    font-weight: 500;
+    font-size: clamp(42px, 12vw, 120px);
+    line-height: 1.03;
+    letter-spacing: 0.02em;
+    color: var(--ink);
+    width: min(84vw, 740px);
+    position: relative;
+    display: grid;
+    grid-template-columns: 1fr;
+    justify-items: center;
+    isolation: isolate;
+  }
+  .hero-kyle {
+    display: block;
+    width: 100%;
+    font-family: 'Playfair Display', 'Times New Roman', serif;
+    text-align: center;
+    padding-right: 0;
+    margin-bottom: 0.02em;
+    position: relative;
+    z-index: 1;
+    font-style: normal;
+    animation: kyleSweep 1.15s cubic-bezier(.22,.8,.24,1) 0.36s both;
+  }
+  .hero-amber {
+    display: block;
+    width: 100%;
+    font-family: 'Playfair Display', 'Times New Roman', serif;
+    text-align: center;
+    padding-left: 0;
+    margin-top: 0.02em;
+    position: relative;
+    z-index: 1;
+    font-style: normal;
+    animation: amberSweep 1.15s cubic-bezier(.22,.8,.24,1) 0.48s both;
   }
   .hero-amp {
     display: block;
-    font-family: 'Cormorant Garamond', serif;
+    font-family: 'Playfair Display', 'Times New Roman', serif;
     font-style: normal;
-    font-weight: 300;
-    font-size: 0.3em;
-    letter-spacing: 0.48em;
-    color: #b8a088;
-    margin: 18px 0;
+    font-weight: 500;
+    font-size: 0.44em;
+    letter-spacing: 0.18em;
+    text-indent: 0.18em;
+    color: var(--dusty-rose);
+    margin: 0.14em 0;
+    text-align: center;
+    line-height: 0.9;
+    position: relative;
+    z-index: 2;
+    animation: heroFloatIn 0.8s cubic-bezier(.22,.78,.24,1) 0.28s both;
   }
   .hero-date {
-    font-family: 'Cormorant Garamond', serif;
+    font-family: 'DM Sans', sans-serif;
     font-size: clamp(14px, 2.8vw, 20px);
-    color: #6b5d52;
-    letter-spacing: 0.1em;
-    font-weight: 300;
-    animation: fadeUp 1.1s ease 0.7s both;
+    color: var(--sage);
+    letter-spacing: 0.14em;
+    font-weight: 500;
+    animation: heroFloatIn 1s ease 0.76s both;
+  }
+  @media (max-width: 480px) {
+    .hero-names { line-height: 1.08; letter-spacing: 0.03em; }
+    .hero-kyle { padding-right: 0; margin-bottom: 0; }
+    .hero-amber { padding-left: 0; margin-top: 0; }
+    .hero-amp { font-size: 0.4em; letter-spacing: 0.16em; text-indent: 0.16em; margin: 0.14em 0; }
   }
   .letterbox {
     position: absolute;
@@ -260,30 +382,59 @@ const CSS = `
     -webkit-user-select: none;
   }
 
-  /* ── Submit button ── */
-  .rsvp-btn {
+  /* ── Gold shimmer button ── */
+  .goldBtn {
+    position: relative;
+    overflow: hidden;
     width: 100%;
-    background: #111;
+    background: #101010;
     color: #f5f0eb;
-    border: none;
+    border: 1px solid rgba(255,255,255,0.08);
     padding: 18px 40px;
     font-family: system-ui, sans-serif;
     font-size: 11px;
     letter-spacing: 0.22em;
     text-transform: uppercase;
     cursor: pointer;
-    transition: opacity 0.2s, transform 0.18s;
-    box-shadow: 0 12px 36px rgba(0,0,0,0.15);
+    box-shadow: 0 14px 36px rgba(0,0,0,0.15);
+    transition: transform 180ms ease, opacity 180ms ease, box-shadow 220ms ease;
     -webkit-tap-highlight-color: transparent;
     touch-action: manipulation;
   }
   @media (min-width: 640px) {
-    .rsvp-btn { width: auto; }
+    .goldBtn { width: auto; }
   }
-  .rsvp-btn:hover  { opacity: 0.82; transform: translateY(-1px); }
-  .rsvp-btn:active { opacity: 0.9;  transform: translateY(0);    }
-  .rsvp-btn:disabled { opacity: 0.5; cursor: wait; transform: none; }
+  .goldBtn::before {
+    content: "";
+    position: absolute;
+    inset: -40%;
+    background: linear-gradient(
+      120deg,
+      rgba(255,255,255,0) 35%,
+      rgba(212,197,176,0.22) 46%,
+      rgba(255,255,255,0) 62%
+    );
+    transform: translateX(-55%);
+    opacity: 0;
+    transition: opacity 180ms ease;
+    pointer-events: none;
+  }
+  .goldBtn:hover {
+    transform: translateY(-1px);
+    opacity: 0.92;
+    box-shadow: 0 18px 50px rgba(0,0,0,0.18);
+  }
+  .goldBtn:hover::before {
+    opacity: 1;
+    animation: shimmerSweep 900ms ease;
+  }
+  .goldBtn:active { transform: translateY(0); opacity: 0.9; }
+  .goldBtn:disabled { opacity: 0.5; cursor: wait; transform: none; }
 
+  @keyframes shimmerSweep {
+    0%   { transform: translateX(-55%); }
+    100% { transform: translateX(55%);  }
+  }
   /* ── Respect reduced motion ── */
   @media (prefers-reduced-motion: reduce) {
     .reveal { transition: none; opacity: 1; transform: none; }
@@ -326,35 +477,102 @@ function FilmOverlay() {
    NAV BAR
 ══════════════════════════════════════════════════════════════════ */
 function NavBar({ scrollY }) {
+  const [menuOpen, setMenuOpen] = useState(false);
   const scrolled = scrollY > 60;
+
+  // Close menu when user scrolls
+  useEffect(() => {
+    if (menuOpen && scrollY > 80) setMenuOpen(false);
+  }, [scrollY]);
+
+  // Lock body scroll while menu is open
+  useEffect(() => {
+    document.body.style.overflow = menuOpen ? "hidden" : "";
+    return () => { document.body.style.overflow = ""; };
+  }, [menuOpen]);
+
+  const brandColor = "#1a1a1a";
+  const barColor   = "#1a1a1a";
+
   const link = {
     fontFamily: "system-ui, sans-serif",
     fontSize: "10px",
     letterSpacing: "0.22em",
     textTransform: "uppercase",
     textDecoration: "none",
-    color: scrolled ? "#6b5d52" : "rgba(107,93,82,0.9)",
-    transition: "color 0.25s",
+    color: "#6b5d52",
+    transition: "color 0.3s",
   };
+
   return (
-    <nav className={`nav${scrolled ? " scrolled" : ""}`}>
-      <span style={{
-        fontFamily: "'Cormorant Garamond', serif",
-        fontSize: "17px",
-        fontWeight: 300,
-        fontStyle: "italic",
-        color: scrolled ? "#1a1a1a" : "rgba(26,26,26,0.88)",
-        letterSpacing: "0.04em",
-        transition: "color 0.3s",
-      }}>
-        Kyle &amp; Amber
-      </span>
-      <div className="nav-links">
-        {["Details", "Gallery", "RSVP"].map((s) => (
-          <a key={s} href={`#${s.toLowerCase()}`} style={link}>{s}</a>
+    <>
+      <nav className="nav">
+        <span style={{
+          fontFamily: "'Playfair Display', serif",
+          fontSize: "17px",
+          fontWeight: 400,
+          fontStyle: "italic",
+          color: brandColor,
+          letterSpacing: "0.04em",
+          transition: "color 0.3s",
+        }}>
+          Kyle &amp; Amber
+        </span>
+
+        {/* Desktop links */}
+        <div className="nav-links">
+          {["Details", "Gallery", "RSVP"].map((s) => (
+            <a key={s} href={`#${s.toLowerCase()}`} style={link}>{s}</a>
+          ))}
+        </div>
+
+        {/* Mobile hamburger */}
+        <button
+          className={`nav-hamburger${menuOpen ? " open" : ""}`}
+          onClick={() => setMenuOpen((o) => !o)}
+          aria-label={menuOpen ? "Close menu" : "Open menu"}
+        >
+          <span style={{ background: barColor }} />
+          <span style={{ background: barColor }} />
+          <span style={{ background: barColor }} />
+        </button>
+      </nav>
+
+      {/* Mobile fullscreen menu */}
+      <div className={`mobile-menu${menuOpen ? " open" : ""}`}>
+        {["Details", "Gallery", "RSVP"].map((s, i) => (
+          <a
+            key={s}
+            href={`#${s.toLowerCase()}`}
+            onClick={() => setMenuOpen(false)}
+            style={{
+              opacity: menuOpen ? 1 : 0,
+              transform: menuOpen ? "translateY(0)" : "translateY(14px)",
+              transition: `opacity 0.35s ease ${0.08 + i * 0.07}s, transform 0.35s ease ${0.08 + i * 0.07}s`,
+            }}
+          >
+            {s}
+          </a>
         ))}
+        <div style={{
+          width: 40, height: 1, background: "#c8b8a2",
+          margin: "20px 0 10px",
+          opacity: menuOpen ? 1 : 0,
+          transition: "opacity 0.35s ease 0.32s",
+        }} />
+        <p style={{
+          fontFamily: "system-ui, sans-serif",
+          fontSize: "10px",
+          color: "#9a8878",
+          letterSpacing: "0.22em",
+          textTransform: "uppercase",
+          opacity: menuOpen ? 1 : 0,
+          transition: "opacity 0.35s ease 0.38s",
+        }}>
+          Kyle &amp; Amber
+        </p>
       </div>
-    </nav>
+    </>
   );
 }
 
@@ -424,7 +642,7 @@ function PhotoCard({ photo, index }) {
           justifyContent: "center",
         }}>
           <span style={{
-            fontFamily: "'Cormorant Garamond', serif",
+            fontFamily: "'Playfair Display', serif",
             fontSize: "12px",
             color: "rgba(255,255,255,0.42)",
             letterSpacing: "0.22em",
@@ -477,7 +695,7 @@ function RSVPForm() {
     border: "none",
     borderBottom: "1px solid #c8b8a2",
     padding: "12px 0",
-    fontFamily: "'Cormorant Garamond', Georgia, serif",
+    fontFamily: "'Playfair Display', serif",
     fontSize: "16px",
     color: "#1a1a1a",
     outline: "none",
@@ -512,9 +730,9 @@ function RSVPForm() {
         </p>
 
         <h2 style={{
-          fontFamily: "'Cormorant Garamond', serif",
+          fontFamily: "'Playfair Display', serif",
           fontSize: "clamp(38px, 9vw, 58px)",
-          fontWeight: 300,
+          fontWeight: 400,
           lineHeight: 1.05,
           color: "#1a1a1a",
           marginBottom: "52px",
@@ -536,9 +754,9 @@ function RSVPForm() {
               fontSize: "24px",
             }}>✉</div>
             <p style={{
-              fontFamily: "'Cormorant Garamond', serif",
+              fontFamily: "'Playfair Display', serif",
               fontSize: "26px",
-              fontWeight: 300,
+              fontWeight: 400,
               color: "#1a1a1a",
               marginBottom: "10px",
             }}>
@@ -604,9 +822,9 @@ function RSVPForm() {
                       transition: "all 0.2s",
                     }} />
                     <span style={{
-                      fontFamily: "'Cormorant Garamond', serif",
+                      fontFamily: "'Playfair Display', serif",
                       fontSize: "18px",
-                      fontWeight: 300,
+                      fontWeight: 400,
                       color: form.attending === value ? "#1a1a1a" : "#9a8878",
                       transition: "color 0.2s",
                     }}>
@@ -647,7 +865,7 @@ function RSVPForm() {
             </div>
 
             <div>
-              <button type="submit" className="rsvp-btn" disabled={loading}>
+              <button type="submit" className="goldBtn" disabled={loading}>
                 {loading ? "Sending…" : "Send RSVP"}
               </button>
             </div>
@@ -715,11 +933,11 @@ export default function WeddingSite() {
         {/* Content */}
         <div style={{ position: "relative", zIndex: 1 }}>
           <p style={{
-            fontFamily: "system-ui, sans-serif",
+            fontFamily: "'DM Sans', sans-serif",
             fontSize: "10px",
             letterSpacing: "0.34em",
             textTransform: "uppercase",
-            color: "#9a8878",
+            color: "#9f8a7a",
             marginBottom: "28px",
             animation: "fadeUp 1s ease 0.2s both",
           }}>
@@ -727,9 +945,9 @@ export default function WeddingSite() {
           </p>
 
           <h1 className="hero-names">
-            <em>Kyle</em>
+            <em className="hero-kyle">Kyle</em>
             <span className="hero-amp">&amp;</span>
-            <em>Amber</em>
+            <em className="hero-amber">Amber</em>
           </h1>
 
           <div style={{
@@ -779,24 +997,24 @@ export default function WeddingSite() {
             }}>
               <p style={detail}>{label}</p>
               <p style={{
-                fontFamily: "'Cormorant Garamond', serif",
+                fontFamily: "'Playfair Display', serif",
                 fontSize: "clamp(20px, 3vw, 24px)",
                 color: "#1a1a1a",
-                fontWeight: 300,
+                fontWeight: 400,
                 lineHeight: 1.5,
               }}>{l1}</p>
               <p style={{
-                fontFamily: "'Cormorant Garamond', serif",
+                fontFamily: "'Playfair Display', serif",
                 fontSize: "clamp(16px, 2.5vw, 19px)",
                 color: "#6b5d52",
-                fontWeight: 300,
+                fontWeight: 400,
               }}>{l2}</p>
               {l3 && (
                 <p style={{
-                  fontFamily: "'Cormorant Garamond', serif",
+                  fontFamily: "'Playfair Display', serif",
                   fontSize: "15px",
                   color: "#9a8878",
-                  fontWeight: 300,
+                  fontWeight: 400,
                 }}>{l3}</p>
               )}
             </div>
@@ -807,7 +1025,7 @@ export default function WeddingSite() {
       {/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  ORNAMENT */}
       <div style={{ textAlign: "center", padding: "8px 0 56px" }}>
         <span style={{
-          fontFamily: "'Cormorant Garamond', serif",
+          fontFamily: "'Playfair Display', serif",
           fontSize: "22px",
           color: "#c8b8a2",
           fontStyle: "italic",
@@ -823,9 +1041,9 @@ export default function WeddingSite() {
         >
           <p style={{ ...detail, marginBottom: "10px" }}>Our story</p>
           <h2 style={{
-            fontFamily: "'Cormorant Garamond', serif",
+            fontFamily: "'Playfair Display', serif",
             fontSize: "clamp(32px, 6vw, 52px)",
-            fontWeight: 300,
+            fontWeight: 400,
             color: "#1a1a1a",
           }}>
             A few memories
@@ -850,9 +1068,9 @@ export default function WeddingSite() {
         borderTop: "1px solid #d4c5b0",
       }}>
         <p style={{
-          fontFamily: "'Cormorant Garamond', serif",
+          fontFamily: "'Playfair Display', serif",
           fontSize: "22px",
-          fontWeight: 300,
+          fontWeight: 400,
           fontStyle: "italic",
           color: "#1a1a1a",
           marginBottom: "8px",
