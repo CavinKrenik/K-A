@@ -1185,7 +1185,7 @@ export default function WeddingSite() {
       </section>
 
       {/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  ORNAMENT */}
-      <div style={{ textAlign: "center", padding: "8px 0 56px" }}>
+      <div style={{ textAlign: "center", padding: "8px 0 16px" }}>
         <span style={{
           fontFamily: "'Playfair Display', serif",
           fontSize: "22px",
