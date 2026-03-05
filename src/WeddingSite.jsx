@@ -322,24 +322,34 @@ const CSS = `
   .details-grid {
     display: grid;
     grid-template-columns: 1fr;
-    max-width: 900px;
+    max-width: 960px;
     margin: 0 auto;
   }
   @media (min-width: 640px) {
-    .details-grid { grid-template-columns: repeat(3, 1fr); }
+    .details-grid { grid-template-columns: 1fr 1fr; }
+  }
+  .details-contact {
+    grid-column: 1;
+  }
+  @media (min-width: 640px) {
+    .details-contact {
+      grid-column: 1 / -1;
+      text-align: center;
+      padding-right: 0 !important;
+    }
   }
 
   /* ── Photo grid ── */
   .photo-grid {
     display: grid;
     grid-template-columns: 1fr;
-    gap: 12px;
+    gap: 20px;
   }
   @media (min-width: 560px) {
-    .photo-grid { grid-template-columns: repeat(2, 1fr); gap: 14px; }
+    .photo-grid { grid-template-columns: repeat(2, 1fr); gap: 22px; }
   }
   @media (min-width: 1024px) {
-    .photo-grid { gap: 18px; }
+    .photo-grid { gap: 28px; }
   }
   .photo-wide { grid-column: span 1; }
   @media (min-width: 560px) {
@@ -349,53 +359,70 @@ const CSS = `
   /* ── Apple-style photo reveal ── */
   .photo-card {
     overflow: hidden;
-    border-radius: 2px;
+    border-radius: 4px;
     position: relative;
     box-shadow: 0 14px 44px rgba(0,0,0,0.1);
     will-change: transform, opacity;
   }
   .photo-card img {
     width: 100%;
-    height: 100%;
-    object-fit: cover;
+    height: auto;
     display: block;
-    filter: contrast(1.02) saturate(0.9);
+    filter: contrast(1.02) saturate(0.92);
   }
 
   /* ── Floating RSVP button ── */
   .fab-rsvp {
     position: fixed;
-    bottom: 28px;
-    right: 28px;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%) translateY(20px) scale(0.92);
     z-index: 300;
-    background: #101010;
+    background: rgba(16,16,16,0.92);
     color: #f5f0eb;
-    border: 1px solid rgba(255,255,255,0.08);
-    padding: 16px 28px;
-    font-family: system-ui, sans-serif;
-    font-size: 11px;
-    letter-spacing: 0.22em;
-    text-transform: uppercase;
+    border: 1px solid rgba(255,255,255,0.1);
+    padding: 15px 36px;
+    font-family: 'Playfair Display', serif;
+    font-size: 14px;
+    font-style: italic;
+    font-weight: 400;
+    letter-spacing: 0.12em;
     cursor: pointer;
     border-radius: 60px;
-    box-shadow: 0 8px 32px rgba(0,0,0,0.22);
-    transition: transform 260ms cubic-bezier(.2,.8,.2,1), opacity 300ms ease, box-shadow 260ms ease;
+    box-shadow: 0 8px 40px rgba(0,0,0,0.25);
+    transition: transform 320ms cubic-bezier(.2,.8,.2,1), opacity 350ms ease, box-shadow 320ms ease;
     -webkit-tap-highlight-color: transparent;
     touch-action: manipulation;
     opacity: 0;
-    transform: translateY(20px) scale(0.92);
     pointer-events: none;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+  }
+  @media (min-width: 640px) {
+    .fab-rsvp {
+      left: auto;
+      right: 32px;
+      bottom: 32px;
+      transform: translateX(0) translateY(20px) scale(0.92);
+      padding: 16px 42px;
+      font-size: 15px;
+    }
   }
   .fab-rsvp.visible {
     opacity: 1;
-    transform: translateY(0) scale(1);
+    transform: translateX(-50%) translateY(0) scale(1);
     pointer-events: auto;
   }
-  .fab-rsvp:hover {
-    transform: translateY(-2px) scale(1.04);
-    box-shadow: 0 14px 44px rgba(0,0,0,0.28);
+  @media (min-width: 640px) {
+    .fab-rsvp.visible {
+      transform: translateX(0) translateY(0) scale(1);
+    }
   }
-  .fab-rsvp:active { transform: translateY(0) scale(0.98); }
+  .fab-rsvp:hover {
+    transform: translateX(0) translateY(-2px) scale(1.04);
+    box-shadow: 0 14px 52px rgba(0,0,0,0.32);
+  }
+  .fab-rsvp:active { transform: translateX(0) translateY(0) scale(0.98); }
 
   /* ── Glass modal ── */
   .glass-backdrop {
@@ -739,29 +766,21 @@ function PhotoCard({ photo, index }) {
       ref={cardRef}
       className={`photo-card${isWide ? " photo-wide" : ""}`}
       style={{
-        aspectRatio: isWide ? "16/8" : "4/5",
         opacity: style.opacity,
         transform: style.transform,
         transition: "transform 0.05s linear, opacity 0.05s linear",
       }}
     >
-      <div style={{ width: "100%", height: "100%", overflow: "hidden" }}>
-        <img
-          src={photo.src}
-          alt=""
-          loading="lazy"
-          style={{
-            height: "120%",
-            transform: `translateY(${style.parallax || 0}px)`,
-            transition: "transform 0.06s linear",
-          }}
-        />
-      </div>
+      <img
+        src={photo.src}
+        alt=""
+        loading="lazy"
+      />
       {/* Bottom vignette */}
       <div style={{
         position: "absolute",
         inset: 0,
-        background: "linear-gradient(to top, rgba(0,0,0,0.22) 0%, transparent 50%)",
+        background: "linear-gradient(to top, rgba(0,0,0,0.18) 0%, transparent 40%)",
         pointerEvents: "none",
       }} />
     </figure>
@@ -959,7 +978,7 @@ function RSVPModal({ open, onClose }) {
                   value={form.guests}
                   onChange={set("guests")}
                 >
-                  {[1, 2, 3, 4].map((n) => (
+                  {[1, 2, 3, 4, 5, 6, 7, 8].map((n) => (
                     <option key={n} value={n}>{n}</option>
                   ))}
                 </select>
@@ -1102,7 +1121,6 @@ export default function WeddingSite() {
         >
           {[
             { label: "Ceremony",  l1: "June 6th, 2026 — Noon",  l2: "Capital Christian Center",  l3: "4431 Martin Way E, Olympia, WA 98516" },
-            { label: "Contact",   l1: "kyleandamberwedding2026@gmail.com",  l2: "Kyle (360) 763-2293",  l3: "Amber (360) 995-2926" },
             { label: "Attire",    l1: "Black Tie Optional",  l2: "Florals Welcome",  l3: "" },
           ].map(({ label, l1, l2, l3 }) => (
             <div key={label} style={{
@@ -1135,6 +1153,29 @@ export default function WeddingSite() {
               )}
             </div>
           ))}
+
+          {/* Contact — full width row on desktop, centered */}
+          <div className="details-contact" style={{
+            borderTop: "1px solid #d4c5b0",
+            paddingTop: "26px",
+            paddingBottom: "40px",
+            paddingRight: "28px",
+          }}>
+            <p style={detail}>Contact</p>
+            <p style={{
+              fontFamily: "'Playfair Display', serif",
+              fontSize: "clamp(15px, 2.2vw, 18px)",
+              color: "#6b5d52",
+              fontWeight: 400,
+              marginTop: "6px",
+            }}>
+              Kyle{" "}
+              <a href="tel:+13607632293" style={{ color: "inherit", textDecoration: "none" }}>(360) 763-2293</a>
+              <span style={{ margin: "0 14px", color: "#c8b8a2" }}>·</span>
+              Amber{" "}
+              <a href="tel:+13609952926" style={{ color: "inherit", textDecoration: "none" }}>(360) 995-2926</a>
+            </p>
+          </div>
         </div>
       </section>
 
