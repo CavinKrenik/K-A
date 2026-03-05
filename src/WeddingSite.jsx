@@ -69,6 +69,69 @@ function useInView(threshold = 0.12) {
 }
 
 /* ══════════════════════════════════════════════════════════════════
+   INFINITY FLOURISH — luxury decorative divider
+══════════════════════════════════════════════════════════════════ */
+function InfinityFlourish() {
+  return (
+    <svg
+      aria-hidden="true"
+      viewBox="0 0 400 36"
+      style={{
+        display: "block",
+        width: "min(340px, 85vw)",
+        height: "auto",
+        margin: "0 auto",
+        opacity: 0.85,
+      }}
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <defs>
+        <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%" stopColor="#b8962e" stopOpacity="0.4" />
+          <stop offset="20%" stopColor="#d4af37" />
+          <stop offset="50%" stopColor="#f3dc9a" />
+          <stop offset="80%" stopColor="#d4af37" />
+          <stop offset="100%" stopColor="#b8962e" stopOpacity="0.4" />
+        </linearGradient>
+      </defs>
+
+      <g fill="url(#goldGrad)">
+        {/* Intricate Left Flourish (Calligraphic style) */}
+        <path d="M 148,18 C 130,22 100,28 70,18 C 50,11 30,12 10,20 C 12,18 20,13 35,14 C 55,15 75,22 95,22 C 115,22 135,16 148,16 Z" />
+        <path d="M 120,18 C 110,12 90,8 70,14 C 68,14 65,16 68,16 C 85,10 105,15 120,18 Z" opacity="0.6" />
+        <circle cx="20" cy="18" r="1.5" />
+        <circle cx="45" cy="16" r="1" opacity="0.7" />
+
+        {/* Intricate Right Flourish (Calligraphic style, mirrored) */}
+        <path d="M 252,18 C 270,22 300,28 330,18 C 350,11 370,12 390,20 C 388,18 380,13 365,14 C 345,15 325,22 305,22 C 285,22 265,16 252,16 Z" />
+        <path d="M 280,18 C 290,12 310,8 330,14 C 332,14 335,16 332,16 C 315,10 295,15 280,18 Z" opacity="0.6" />
+        <circle cx="380" cy="18" r="1.5" />
+        <circle cx="355" cy="16" r="1" opacity="0.7" />
+      </g>
+
+      {/* Center Infinity Symbol (refined and precise) */}
+      <path
+        d="M 164,18 C 164,10 174,4 184,12 C 190,16 192,20 200,20 C 208,20 210,16 216,12 C 226,4 236,10 236,18 C 236,26 226,32 216,24 C 210,20 208,16 200,16 C 192,16 190,20 184,24 C 174,32 164,26 164,18 Z"
+        fill="none"
+        stroke="url(#goldGrad)"
+        strokeWidth="1.2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+
+      {/* Decorative center node on infinity */}
+      <polygon points="200,14 196,18 200,22 204,18" fill="url(#goldGrad)" />
+
+      {/* Tiny jewel dots inside the infinity loops */}
+      <circle cx="182" cy="18" r="1.5" fill="url(#goldGrad)" opacity="0.85" />
+      <circle cx="218" cy="18" r="1.5" fill="url(#goldGrad)" opacity="0.85" />
+    </svg>
+  );
+}
+
+
+
+/* ══════════════════════════════════════════════════════════════════
    GLOBAL STYLES  (mobile-first, then ≥640 tablet, ≥1024 desktop)
 ══════════════════════════════════════════════════════════════════ */
 const CSS = `
@@ -210,14 +273,15 @@ const CSS = `
   }
   .mobile-menu.open { opacity: 1; pointer-events: auto; }
   .mobile-menu a {
-    font-family: 'Playfair Display', serif;
-    font-size: clamp(40px, 11vw, 58px);
-    font-style: italic;
-    font-weight: 400;
+    font-family: 'DM Sans', sans-serif;
+    font-size: clamp(28px, 8vw, 40px);
+    font-style: normal;
+    font-weight: 500;
     color: #1a1a1a;
     text-decoration: none;
-    letter-spacing: 0.03em;
-    padding: 10px 0;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 12px 0;
     transition: color 0.2s;
   }
   .mobile-menu a:hover { color: #9a8878; }
@@ -849,7 +913,7 @@ function NavBar({ scrollY, onRsvpClick }) {
   }, [menuOpen]);
 
   const brandColor = "#1a1a1a";
-  const barColor   = "#1a1a1a";
+  const barColor = "#1a1a1a";
 
   const link = {
     fontFamily: "system-ui, sans-serif",
@@ -1240,7 +1304,7 @@ function RSVPModal({ open, onClose }) {
               <div className="attend-row">
                 {[
                   { value: "yes", label: "Joyfully accepts" },
-                  { value: "no",  label: "Regretfully declines" },
+                  { value: "no", label: "Regretfully declines" },
                 ].map(({ value, label }) => (
                   <label key={value} className="attend-opt">
                     <input
@@ -1341,7 +1405,7 @@ function RSVPModal({ open, onClose }) {
 const CAL_EVENT = {
   title: "Kyle & Amber's Wedding",
   start: "20260606T190000Z", // June 6 2026 noon PDT = 19:00 UTC
-  end:   "20260606T230000Z", // ~4 PM PDT = 23:00 UTC
+  end: "20260606T230000Z", // ~4 PM PDT = 23:00 UTC
   location: "Capital Christian Center, 4431 Martin Way E, Olympia, WA 98516",
   description: "Wedding ceremony of Kyle Hollenbaugh & Amber Rivera. Arrive by 11:00 AM, seated by 11:30 AM. Ceremony begins at noon.",
 };
@@ -1451,7 +1515,7 @@ function Lightbox({ photos, index, onClose, onPrev, onNext }) {
       {isOpen && (
         <>
           <button className="lightbox-btn lightbox-prev" onClick={onPrev} aria-label="Previous photo">
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M10 3L5 8L10 13" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M10 3L5 8L10 13" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" /></svg>
           </button>
           <img
             className="lightbox-img"
@@ -1459,7 +1523,7 @@ function Lightbox({ photos, index, onClose, onPrev, onNext }) {
             alt={`Wedding photo ${index + 1} of ${photos.length}`}
           />
           <button className="lightbox-btn lightbox-next" onClick={onNext} aria-label="Next photo">
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M6 3L11 8L6 13" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M6 3L11 8L6 13" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" /></svg>
           </button>
           <p className="lightbox-counter">{index + 1} / {photos.length}</p>
         </>
@@ -1556,17 +1620,18 @@ export default function WeddingSite() {
             Join
           </p>
 
+          <div style={{ margin: "10px 0 6px", animation: "fadeUp 1s ease 0.3s both" }}>
+            <InfinityFlourish />
+          </div>
+
           <h1 className="hero-names">
             <em className="hero-kyle">Kyle Hollenbaugh</em>
             <em className="hero-amber"><span className="hero-amp">&amp;</span> Amber Rivera</em>
           </h1>
 
-          <div style={{
-            width: "44px",
-            height: "1px",
-            background: "#c8b8a2",
-            margin: "24px auto",
-          }} />
+          <div style={{ margin: "6px 0 20px", animation: "fadeUp 1s ease 0.5s both" }}>
+            <InfinityFlourish />
+          </div>
 
           <p className="hero-date">
             June 6th, 2026
