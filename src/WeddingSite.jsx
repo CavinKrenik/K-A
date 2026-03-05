@@ -9,8 +9,8 @@ const PHOTOS = [
   { src: "/4.jpg" },
   { src: "/1.jpg" },
   { src: "/2.jpg" },
-  { src: "/3.jpg" },
-  { src: "/6.jpg" },
+  { src: "/3.jpg", wide: true },
+  { src: "/6.jpg", wide: true },
 ];
 
 /* ══════════════════════════════════════════════════════════════════
@@ -765,7 +765,7 @@ function PhotoCard({ photo, index }) {
     return () => window.removeEventListener("scroll", update);
   }, []);
 
-  const isWide = index % 3 === 0;
+  const isWide = !!photo.wide;
 
   return (
     <figure
