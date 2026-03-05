@@ -324,19 +324,10 @@ const CSS = `
     grid-template-columns: 1fr;
     max-width: 960px;
     margin: 0 auto;
-  }
-  @media (min-width: 640px) {
-    .details-grid { grid-template-columns: 1fr 1fr; }
+    text-align: center;
   }
   .details-contact {
     grid-column: 1;
-  }
-  @media (min-width: 640px) {
-    .details-contact {
-      grid-column: 1 / -1;
-      text-align: center;
-      padding-right: 0 !important;
-    }
   }
 
   /* ── Photo grid ── */
@@ -1119,40 +1110,33 @@ export default function WeddingSite() {
           ref={detailsRef}
           className={`details-grid reveal${detailsVisible ? " in" : ""}`}
         >
-          {[
-            { label: "Ceremony",  l1: "June 6th, 2026 — Noon",  l2: "Capital Christian Center",  l3: "4431 Martin Way E, Olympia, WA 98516" },
-            { label: "Attire",    l1: "Black Tie Optional",  l2: "Florals Welcome",  l3: "" },
-          ].map(({ label, l1, l2, l3 }) => (
-            <div key={label} style={{
-              borderTop: "1px solid #d4c5b0",
-              paddingTop: "26px",
-              paddingBottom: "40px",
-              paddingRight: "28px",
-            }}>
-              <p style={detail}>{label}</p>
-              <p style={{
-                fontFamily: "'Playfair Display', serif",
-                fontSize: "clamp(20px, 3vw, 24px)",
-                color: "#1a1a1a",
-                fontWeight: 400,
-                lineHeight: 1.5,
-              }}>{l1}</p>
-              <p style={{
-                fontFamily: "'Playfair Display', serif",
-                fontSize: "clamp(16px, 2.5vw, 19px)",
-                color: "#6b5d52",
-                fontWeight: 400,
-              }}>{l2}</p>
-              {l3 && (
-                <p style={{
-                  fontFamily: "'Playfair Display', serif",
-                  fontSize: "15px",
-                  color: "#9a8878",
-                  fontWeight: 400,
-                }}>{l3}</p>
-              )}
-            </div>
-          ))}
+          {/* Ceremony — centered */}
+          <div style={{
+            borderTop: "1px solid #d4c5b0",
+            paddingTop: "26px",
+            paddingBottom: "40px",
+          }}>
+            <p style={detail}>Ceremony</p>
+            <p style={{
+              fontFamily: "'Playfair Display', serif",
+              fontSize: "clamp(20px, 3vw, 24px)",
+              color: "#1a1a1a",
+              fontWeight: 400,
+              lineHeight: 1.5,
+            }}>June 6th, 2026 — Noon</p>
+            <p style={{
+              fontFamily: "'Playfair Display', serif",
+              fontSize: "clamp(16px, 2.5vw, 19px)",
+              color: "#6b5d52",
+              fontWeight: 400,
+            }}>Capital Christian Center</p>
+            <p style={{
+              fontFamily: "'Playfair Display', serif",
+              fontSize: "15px",
+              color: "#9a8878",
+              fontWeight: 400,
+            }}>4431 Martin Way E, Olympia, WA 98516</p>
+          </div>
 
           {/* Contact — full width row on desktop, centered */}
           <div className="details-contact" style={{
