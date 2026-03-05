@@ -452,6 +452,64 @@ const CSS = `
     .glass-card { padding: 52px 44px 48px; }
   }
 
+  /* ── Calendar dropdown ── */
+  .cal-wrap {
+    position: relative;
+    display: inline-block;
+    margin-top: 18px;
+  }
+  .cal-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: transparent;
+    border: 1px solid #c8b8a2;
+    padding: 10px 20px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 12px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #6b5d52;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .cal-btn:hover { background: #1a1a1a; color: #f5f0eb; border-color: #1a1a1a; }
+  .cal-btn:hover svg { stroke: #f5f0eb; }
+  .cal-dropdown {
+    position: absolute;
+    top: calc(100% + 6px);
+    left: 50%;
+    transform: translateX(-50%) translateY(-4px);
+    background: rgba(245,240,235,0.97);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid #d4c5b0;
+    border-radius: 8px;
+    padding: 6px 0;
+    min-width: 180px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.12);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s, transform 0.2s;
+    z-index: 10;
+  }
+  .cal-dropdown.open {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateX(-50%) translateY(0);
+  }
+  .cal-dropdown a {
+    display: block;
+    padding: 10px 18px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    color: #3a3a3a;
+    text-decoration: none;
+    transition: background 0.15s;
+  }
+  .cal-dropdown a:hover { background: rgba(200,184,162,0.2); }
+
   /* ── RSVP form ── */
   .rsvp-wrap {
     max-width: 540px;
@@ -535,6 +593,204 @@ const CSS = `
     0%   { transform: translateX(-55%); }
     100% { transform: translateX(55%);  }
   }
+
+  /* ── Loading spinner ── */
+  @keyframes spin {
+    to { transform: rotate(360deg); }
+  }
+  .btn-spinner {
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    border: 2px solid rgba(245,240,235,0.3);
+    border-top-color: #f5f0eb;
+    border-radius: 50%;
+    animation: spin 0.6s linear infinite;
+    vertical-align: middle;
+    margin-right: 8px;
+  }
+
+  /* ── Checkmark draw animation ── */
+  @keyframes drawCheck {
+    from { stroke-dashoffset: 36; }
+    to   { stroke-dashoffset: 0; }
+  }
+  @keyframes scaleIn {
+    from { transform: scale(0.7); opacity: 0; }
+    to   { transform: scale(1); opacity: 1; }
+  }
+  .success-circle {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    border: 1.5px solid #7d8b77;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 24px;
+    animation: scaleIn 0.5s cubic-bezier(.2,.8,.2,1) both;
+  }
+  .success-check {
+    stroke-dasharray: 36;
+    stroke-dashoffset: 36;
+    animation: drawCheck 0.5s ease 0.3s forwards;
+  }
+
+  /* ── Form error state ── */
+  .error-msg {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 12px;
+    color: #c0564f;
+    margin-top: 6px;
+  }
+
+  /* ── Honeypot ── */
+  .honeypot {
+    position: absolute;
+    left: -9999px;
+    opacity: 0;
+    height: 0;
+    overflow: hidden;
+  }
+
+  /* ── Lightbox ── */
+  .lightbox-backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 500;
+    background: rgba(0,0,0,0.92);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+  }
+  .lightbox-backdrop.open {
+    opacity: 1;
+    pointer-events: auto;
+  }
+  .lightbox-img {
+    max-width: 90vw;
+    max-height: 85vh;
+    object-fit: contain;
+    border-radius: 4px;
+    transform: scale(0.95);
+    transition: transform 0.35s cubic-bezier(.2,.8,.2,1);
+  }
+  .lightbox-backdrop.open .lightbox-img {
+    transform: scale(1);
+  }
+  .lightbox-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.15);
+    color: #f5f0eb;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    font-size: 20px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    -webkit-tap-highlight-color: transparent;
+  }
+  .lightbox-btn:hover { background: rgba(255,255,255,0.2); }
+  .lightbox-prev { left: 16px; }
+  .lightbox-next { right: 16px; }
+  .lightbox-close {
+    position: absolute;
+    top: 16px;
+    right: 20px;
+    background: none;
+    border: none;
+    color: rgba(255,255,255,0.7);
+    font-size: 28px;
+    cursor: pointer;
+    padding: 8px;
+    transition: color 0.2s;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .lightbox-close:hover { color: #fff; }
+  .lightbox-counter {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 12px;
+    color: rgba(255,255,255,0.5);
+    letter-spacing: 0.1em;
+  }
+  @media (max-width: 640px) {
+    .lightbox-btn { width: 40px; height: 40px; font-size: 16px; }
+    .lightbox-prev { left: 8px; }
+    .lightbox-next { right: 8px; }
+  }
+
+  /* ── FAQ ── */
+  .faq-section {
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 80px 20px 100px;
+  }
+  @media (min-width: 640px) {
+    .faq-section { padding: 100px 40px 120px; }
+  }
+  .faq-item {
+    border-top: 1px solid #d4c5b0;
+    padding: 28px 0;
+  }
+  .faq-q {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(18px, 3vw, 22px);
+    font-weight: 400;
+    color: #1a1a1a;
+    margin-bottom: 12px;
+  }
+  .faq-a {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px;
+    color: #6b5d52;
+    line-height: 1.7;
+  }
+  .faq-a a {
+    color: var(--dusty-rose);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+  .faq-a a:hover { color: #1a1a1a; }
+
+  /* ── Focus visible ── */
+  :focus-visible {
+    outline: 2px solid var(--dusty-rose);
+    outline-offset: 3px;
+  }
+  .glass-close:focus-visible,
+  .lightbox-close:focus-visible,
+  .lightbox-btn:focus-visible {
+    outline: 2px solid #f5f0eb;
+    outline-offset: 2px;
+  }
+  .fab-rsvp:focus-visible {
+    outline: 2px solid #f5f0eb;
+    outline-offset: 4px;
+  }
+  .goldBtn:focus-visible {
+    outline: 2px solid #f5f0eb;
+    outline-offset: 3px;
+  }
+  .photo-card:focus-visible {
+    outline: 2px solid var(--dusty-rose);
+    outline-offset: 4px;
+  }
+
   /* ── Respect reduced motion ── */
   @media (prefers-reduced-motion: reduce) {
     .reveal { transition: none; opacity: 1; transform: none; }
@@ -609,7 +865,7 @@ function NavBar({ scrollY, onRsvpClick }) {
       <nav className="nav">
         {/* Desktop links */}
         <div className="nav-links">
-          {["Details", "Gallery"].map((s) => (
+          {["Details", "Gallery", "FAQ"].map((s) => (
             <a key={s} href={`#${s.toLowerCase()}`} style={link}>{s}</a>
           ))}
           <a key="Registry" href="https://www.target.com/gift-registry/gift-giver?registryId=3db2c510-174e-11f1-8c28-17903ce32dc5&type=WEDDING" target="_blank" rel="noopener noreferrer" style={link}>Registry</a>
@@ -630,7 +886,7 @@ function NavBar({ scrollY, onRsvpClick }) {
 
       {/* Mobile fullscreen menu */}
       <div className={`mobile-menu${menuOpen ? " open" : ""}`}>
-        {["Details", "Gallery"].map((s, i) => (
+        {["Details", "Gallery", "FAQ"].map((s, i) => (
           <a
             key={s}
             href={`#${s.toLowerCase()}`}
@@ -653,7 +909,7 @@ function NavBar({ scrollY, onRsvpClick }) {
           style={{
             opacity: menuOpen ? 1 : 0,
             transform: menuOpen ? "translateY(0)" : "translateY(14px)",
-            transition: `opacity 0.35s ease ${0.08 + 2 * 0.07}s, transform 0.35s ease ${0.08 + 2 * 0.07}s`,
+            transition: `opacity 0.35s ease ${0.08 + 3 * 0.07}s, transform 0.35s ease ${0.08 + 3 * 0.07}s`,
           }}
         >
           Registry
@@ -665,7 +921,7 @@ function NavBar({ scrollY, onRsvpClick }) {
           style={{
             opacity: menuOpen ? 1 : 0,
             transform: menuOpen ? "translateY(0)" : "translateY(14px)",
-            transition: `opacity 0.35s ease ${0.08 + 3 * 0.07}s, transform 0.35s ease ${0.08 + 3 * 0.07}s`,
+            transition: `opacity 0.35s ease ${0.08 + 4 * 0.07}s, transform 0.35s ease ${0.08 + 4 * 0.07}s`,
           }}
         >
           RSVP
@@ -695,7 +951,7 @@ function NavBar({ scrollY, onRsvpClick }) {
 /* ══════════════════════════════════════════════════════════════════
    PHOTO CARD  (Apple-style scroll reveal with parallax)
 ══════════════════════════════════════════════════════════════════ */
-function PhotoCard({ photo, index }) {
+function PhotoCard({ photo, index, onClick }) {
   const cardRef = useRef(null);
   const [style, setStyle] = useState({ opacity: 0, transform: "scale(1.08) translateY(40px)" });
 
@@ -741,11 +997,16 @@ function PhotoCard({ photo, index }) {
         opacity: style.opacity,
         transform: style.transform,
         transition: "transform 0.05s linear, opacity 0.05s linear",
+        cursor: onClick ? "pointer" : "default",
       }}
+      onClick={onClick}
+      role={onClick ? "button" : undefined}
+      tabIndex={onClick ? 0 : undefined}
+      onKeyDown={onClick ? (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); onClick(); } } : undefined}
     >
       <img
         src={photo.src}
-        alt=""
+        alt={`Wedding photo ${index + 1}`}
         loading="lazy"
       />
       {/* Bottom vignette */}
@@ -763,26 +1024,84 @@ function PhotoCard({ photo, index }) {
    RSVP MODAL  (Netlify — glass blur overlay)
 ══════════════════════════════════════════════════════════════════ */
 function RSVPModal({ open, onClose }) {
-  const [form, setForm] = useState({ name: "", guests: "1", attending: "yes", note: "" });
+  const [form, setForm] = useState({ name: "", guests: "1", attending: "yes", note: "", guestNames: [] });
   const [sent, setSent] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [errors, setErrors] = useState({});
+  const firstInputRef = useRef(null);
 
-  // Lock body scroll while open
+  // Lock body scroll while open + autofocus
   useEffect(() => {
     document.body.style.overflow = open ? "hidden" : "";
+    if (open && firstInputRef.current) {
+      setTimeout(() => firstInputRef.current.focus(), 400);
+    }
     return () => { document.body.style.overflow = ""; };
   }, [open]);
 
-  const set = (k) => (e) => setForm((f) => ({ ...f, [k]: e.target.value }));
+  // Close on Escape
+  useEffect(() => {
+    if (!open) return;
+    const onKey = (e) => { if (e.key === "Escape") onClose(); };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [open, onClose]);
+
+  const set = (k) => (e) => {
+    const val = e.target.value;
+    setForm((f) => {
+      const next = { ...f, [k]: val };
+      if (k === "guests") {
+        const count = parseInt(val, 10) || 1;
+        const names = [...(f.guestNames || [])];
+        while (names.length < count - 1) names.push("");
+        next.guestNames = names.slice(0, count - 1);
+      }
+      return next;
+    });
+    if (errors[k]) setErrors((prev) => ({ ...prev, [k]: false }));
+  };
+
+  const setGuestName = (idx) => (e) => {
+    const val = e.target.value;
+    setForm((f) => {
+      const names = [...(f.guestNames || [])];
+      names[idx] = val;
+      return { ...f, guestNames: names };
+    });
+    if (errors[`guest-${idx}`]) setErrors((prev) => ({ ...prev, [`guest-${idx}`]: false }));
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!form.name.trim()) return;
+    const newErrors = {};
+    if (!form.name.trim()) newErrors.name = true;
+    if (form.attending === "yes") {
+      (form.guestNames || []).forEach((n, i) => {
+        if (!n.trim()) newErrors[`guest-${i}`] = true;
+      });
+    }
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      return;
+    }
     setLoading(true);
+    const data = {
+      "form-name": "rsvp",
+      name: form.name,
+      attending: form.attending,
+      guests: form.attending === "yes" ? form.guests : "0",
+      note: form.note,
+    };
+    if (form.attending === "yes") {
+      (form.guestNames || []).forEach((n, i) => {
+        data[`guest-name-${i + 2}`] = n;
+      });
+    }
     fetch("/", {
       method: "POST",
       headers: { "Content-Type": "application/x-www-form-urlencoded" },
-      body: new URLSearchParams({ "form-name": "rsvp", ...form }).toString(),
+      body: new URLSearchParams(data).toString(),
     })
       .then(() => setSent(true))
       .catch(() => alert("Submission failed — please try again."))
@@ -803,6 +1122,7 @@ function RSVPModal({ open, onClose }) {
     borderRadius: 0,
     appearance: "none",
     WebkitAppearance: "none",
+    transition: "border-color 0.2s",
   };
 
   const labelStyle = {
@@ -819,6 +1139,9 @@ function RSVPModal({ open, onClose }) {
     <div
       className={`glass-backdrop${open ? " open" : ""}`}
       onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="rsvp-title"
     >
       <div className="glass-card" style={{ position: "relative" }}>
         <button className="glass-close" onClick={onClose} aria-label="Close RSVP">&times;</button>
@@ -834,7 +1157,7 @@ function RSVPModal({ open, onClose }) {
           kindly reply
         </p>
 
-        <h2 style={{
+        <h2 id="rsvp-title" style={{
           fontFamily: "'Playfair Display', serif",
           fontSize: "clamp(30px, 7vw, 44px)",
           fontWeight: 400,
@@ -847,17 +1170,18 @@ function RSVPModal({ open, onClose }) {
 
         {sent ? (
           <div style={{ textAlign: "center", padding: "32px 0 10px" }}>
-            <div style={{
-              width: "56px",
-              height: "56px",
-              borderRadius: "50%",
-              border: "1px solid #c8b8a2",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              margin: "0 auto 24px",
-              fontSize: "24px",
-            }}>✉</div>
+            <div className="success-circle">
+              <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+                <path
+                  className="success-check"
+                  d="M6 14.5L11.5 20L22 8"
+                  stroke="#7d8b77"
+                  strokeWidth="2.5"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+            </div>
             <p style={{
               fontFamily: "'Playfair Display', serif",
               fontSize: "26px",
@@ -881,28 +1205,37 @@ function RSVPModal({ open, onClose }) {
             name="rsvp"
             method="POST"
             data-netlify="true"
+            data-netlify-honeypot="bot-field"
             onSubmit={handleSubmit}
             style={{ display: "flex", flexDirection: "column", gap: "28px" }}
           >
             <input type="hidden" name="form-name" value="rsvp" />
+            <div className="honeypot" aria-hidden="true">
+              <label>Don&apos;t fill this out if you&apos;re human
+                <input name="bot-field" tabIndex={-1} autoComplete="off" />
+              </label>
+            </div>
 
             {/* Name */}
             <div>
-              <label style={labelStyle}>Full Name</label>
+              <label htmlFor="rsvp-name" style={labelStyle}>Full Name</label>
               <input
+                id="rsvp-name"
+                ref={firstInputRef}
                 name="name"
-                style={inputBase}
+                style={{ ...inputBase, ...(errors.name ? { borderBottomColor: "#c0564f" } : {}) }}
                 placeholder="Your name"
                 value={form.name}
                 onChange={set("name")}
                 required
                 autoComplete="name"
               />
+              {errors.name && <p className="error-msg">Please enter your name</p>}
             </div>
 
             {/* Attending */}
-            <div>
-              <label style={labelStyle}>Attending</label>
+            <fieldset style={{ border: "none", padding: 0, margin: 0 }}>
+              <legend style={labelStyle}>Attending</legend>
               <div className="attend-row">
                 {[
                   { value: "yes", label: "Joyfully accepts" },
@@ -915,7 +1248,7 @@ function RSVPModal({ open, onClose }) {
                       value={value}
                       checked={form.attending === value}
                       onChange={set("attending")}
-                      style={{ display: "none" }}
+                      style={{ position: "absolute", opacity: 0, width: 0, height: 0 }}
                     />
                     <div style={{
                       width: "20px",
@@ -938,29 +1271,49 @@ function RSVPModal({ open, onClose }) {
                   </label>
                 ))}
               </div>
-            </div>
+            </fieldset>
 
-            {/* Guest count */}
+            {/* Guest count + dynamic names */}
             {form.attending === "yes" && (
-              <div>
-                <label style={labelStyle}>Number of Guests</label>
-                <select
-                  name="guests"
-                  style={{ ...inputBase, cursor: "pointer", paddingRight: "20px" }}
-                  value={form.guests}
-                  onChange={set("guests")}
-                >
-                  {[1, 2, 3, 4, 5, 6, 7, 8].map((n) => (
-                    <option key={n} value={n}>{n}</option>
-                  ))}
-                </select>
-              </div>
+              <>
+                <div>
+                  <label htmlFor="rsvp-guests" style={labelStyle}>Number of Guests</label>
+                  <select
+                    id="rsvp-guests"
+                    name="guests"
+                    style={{ ...inputBase, cursor: "pointer", paddingRight: "20px" }}
+                    value={form.guests}
+                    onChange={set("guests")}
+                  >
+                    {[1, 2, 3, 4, 5, 6, 7, 8].map((n) => (
+                      <option key={n} value={n}>{n}</option>
+                    ))}
+                  </select>
+                </div>
+
+                {(form.guestNames || []).map((gn, i) => (
+                  <div key={i}>
+                    <label htmlFor={`rsvp-guest-${i + 2}`} style={labelStyle}>Guest {i + 2} Name</label>
+                    <input
+                      id={`rsvp-guest-${i + 2}`}
+                      name={`guest-name-${i + 2}`}
+                      style={{ ...inputBase, ...(errors[`guest-${i}`] ? { borderBottomColor: "#c0564f" } : {}) }}
+                      placeholder={`Guest ${i + 2} name`}
+                      value={gn}
+                      onChange={setGuestName(i)}
+                      autoComplete="name"
+                    />
+                    {errors[`guest-${i}`] && <p className="error-msg">Please enter this guest&apos;s name</p>}
+                  </div>
+                ))}
+              </>
             )}
 
             {/* Note */}
             <div>
-              <label style={labelStyle}>A Note for the Couple</label>
+              <label htmlFor="rsvp-note" style={labelStyle}>A Note for the Couple</label>
               <textarea
+                id="rsvp-note"
                 name="note"
                 style={{ ...inputBase, resize: "none", height: "76px" }}
                 placeholder="Optional message…"
@@ -971,12 +1324,145 @@ function RSVPModal({ open, onClose }) {
 
             <div>
               <button type="submit" className="goldBtn" disabled={loading}>
-                {loading ? "Sending…" : "Send RSVP"}
+                {loading ? <><span className="btn-spinner" />Sending…</> : "Send RSVP"}
               </button>
             </div>
           </form>
         )}
       </div>
+    </div>
+  );
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   ADD TO CALENDAR
+══════════════════════════════════════════════════════════════════ */
+const CAL_EVENT = {
+  title: "Kyle & Amber's Wedding",
+  start: "20260606T190000Z", // June 6 2026 noon PDT = 19:00 UTC
+  end:   "20260606T230000Z", // ~4 PM PDT = 23:00 UTC
+  location: "Capital Christian Center, 4431 Martin Way E, Olympia, WA 98516",
+  description: "Wedding ceremony of Kyle Hollenbaugh & Amber Rivera. Arrive by 11:00 AM, seated by 11:30 AM. Ceremony begins at noon.",
+};
+
+function AddToCalendar() {
+  const [open, setOpen] = useState(false);
+  const wrapRef = useRef(null);
+
+  useEffect(() => {
+    if (!open) return;
+    const close = (e) => { if (wrapRef.current && !wrapRef.current.contains(e.target)) setOpen(false); };
+    document.addEventListener("click", close);
+    return () => document.removeEventListener("click", close);
+  }, [open]);
+
+  const googleUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(CAL_EVENT.title)}&dates=${CAL_EVENT.start}/${CAL_EVENT.end}&location=${encodeURIComponent(CAL_EVENT.location)}&details=${encodeURIComponent(CAL_EVENT.description)}`;
+
+  const icsContent = [
+    "BEGIN:VCALENDAR",
+    "VERSION:2.0",
+    "BEGIN:VEVENT",
+    `DTSTART:${CAL_EVENT.start}`,
+    `DTEND:${CAL_EVENT.end}`,
+    `SUMMARY:${CAL_EVENT.title}`,
+    `LOCATION:${CAL_EVENT.location}`,
+    `DESCRIPTION:${CAL_EVENT.description}`,
+    "END:VEVENT",
+    "END:VCALENDAR",
+  ].join("\r\n");
+
+  const downloadIcs = (e) => {
+    e.preventDefault();
+    const blob = new Blob([icsContent], { type: "text/calendar;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "kyle-amber-wedding.ics";
+    a.click();
+    URL.revokeObjectURL(url);
+    setOpen(false);
+  };
+
+  return (
+    <div className="cal-wrap" ref={wrapRef}>
+      <button
+        className="cal-btn"
+        onClick={() => setOpen((o) => !o)}
+        aria-expanded={open}
+        aria-haspopup="true"
+      >
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="#6b5d52" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round">
+          <rect x="1" y="2.5" width="12" height="10" rx="1.5" />
+          <line x1="4" y1="1" x2="4" y2="4" />
+          <line x1="10" y1="1" x2="10" y2="4" />
+          <line x1="1" y1="6" x2="13" y2="6" />
+        </svg>
+        Add to Calendar
+      </button>
+      <div className={`cal-dropdown${open ? " open" : ""}`}>
+        <a href={googleUrl} target="_blank" rel="noopener noreferrer" onClick={() => setOpen(false)}>Google Calendar</a>
+        <a href="#" onClick={downloadIcs}>Apple Calendar</a>
+        <a href="#" onClick={downloadIcs}>Outlook</a>
+      </div>
+    </div>
+  );
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   LIGHTBOX
+══════════════════════════════════════════════════════════════════ */
+function Lightbox({ photos, index, onClose, onPrev, onNext }) {
+  const isOpen = index !== null && index !== undefined;
+  const touchStart = useRef(null);
+
+  useEffect(() => {
+    if (!isOpen) return;
+    const onKey = (e) => {
+      if (e.key === "Escape") onClose();
+      else if (e.key === "ArrowLeft") onPrev();
+      else if (e.key === "ArrowRight") onNext();
+    };
+    window.addEventListener("keydown", onKey);
+    document.body.style.overflow = "hidden";
+    return () => {
+      window.removeEventListener("keydown", onKey);
+      document.body.style.overflow = "";
+    };
+  }, [isOpen, onClose, onPrev, onNext]);
+
+  const onTouchStart = (e) => { touchStart.current = e.touches[0].clientX; };
+  const onTouchEnd = (e) => {
+    if (touchStart.current === null) return;
+    const diff = e.changedTouches[0].clientX - touchStart.current;
+    if (Math.abs(diff) > 50) { diff > 0 ? onPrev() : onNext(); }
+    touchStart.current = null;
+  };
+
+  return (
+    <div
+      className={`lightbox-backdrop${isOpen ? " open" : ""}`}
+      onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}
+      onTouchStart={onTouchStart}
+      onTouchEnd={onTouchEnd}
+      aria-hidden={!isOpen}
+    >
+      <button className="lightbox-close" onClick={onClose} aria-label="Close gallery">&times;</button>
+      {isOpen && (
+        <>
+          <button className="lightbox-btn lightbox-prev" onClick={onPrev} aria-label="Previous photo">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M10 3L5 8L10 13" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
+          </button>
+          <img
+            className="lightbox-img"
+            src={photos[index].src}
+            alt={`Wedding photo ${index + 1} of ${photos.length}`}
+          />
+          <button className="lightbox-btn lightbox-next" onClick={onNext} aria-label="Next photo">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M6 3L11 8L6 13" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
+          </button>
+          <p className="lightbox-counter">{index + 1} / {photos.length}</p>
+        </>
+      )}
     </div>
   );
 }
@@ -989,6 +1475,22 @@ export default function WeddingSite() {
   const [detailsRef, detailsVisible] = useInView(0.08);
   const [galleryHeaderRef, galleryHeaderVisible] = useInView(0.1);
   const [rsvpOpen, setRsvpOpen] = useState(false);
+  const [lightboxIndex, setLightboxIndex] = useState(null);
+  const [faqRef, faqVisible] = useInView(0.08);
+  const footerRef = useRef(null);
+  const [fabHidden, setFabHidden] = useState(false);
+
+  // Hide FAB when footer is in view
+  useEffect(() => {
+    const el = footerRef.current;
+    if (!el) return;
+    const obs = new IntersectionObserver(
+      ([e]) => setFabHidden(e.isIntersecting),
+      { threshold: 0.1 }
+    );
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, []);
 
 
   const detail = {
@@ -1141,12 +1643,32 @@ export default function WeddingSite() {
               color: "#6b5d52",
               fontWeight: 400,
             }}>Capital Christian Center</p>
+            <a
+              href="https://maps.google.com/?q=Capital+Christian+Center,+4431+Martin+Way+E,+Olympia,+WA+98516"
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{
+                fontFamily: "'Playfair Display', serif",
+                fontSize: "15px",
+                color: "#9a8878",
+                fontWeight: 400,
+                textDecoration: "none",
+                borderBottom: "1px solid rgba(154,136,120,0.35)",
+                paddingBottom: "1px",
+                transition: "color 0.2s",
+                display: "inline-block",
+              }}
+            >4431 Martin Way E, Olympia, WA 98516</a>
             <p style={{
-              fontFamily: "'Playfair Display', serif",
-              fontSize: "15px",
+              fontFamily: "'DM Sans', sans-serif",
+              fontSize: "13px",
               color: "#9a8878",
               fontWeight: 400,
-            }}>4431 Martin Way E, Olympia, WA 98516</p>
+              fontStyle: "italic",
+              marginTop: "14px",
+              lineHeight: 1.5,
+            }}>Arrive by 11:00 AM · Seated by 11:30 AM</p>
+            <AddToCalendar />
           </div>
 
           {/* Contact — full width row on desktop, centered */}
@@ -1200,22 +1722,91 @@ export default function WeddingSite() {
 
         <div className="photo-grid">
           {PHOTOS.map((photo, i) => (
-            <PhotoCard key={i} photo={photo} index={i} />
+            <PhotoCard key={i} photo={photo} index={i} onClick={() => setLightboxIndex(i)} />
           ))}
         </div>
       </section>
+
+      {/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  FAQ */}
+      <section id="faq" className="faq-section">
+        <div
+          ref={faqRef}
+          className={`reveal${faqVisible ? " in" : ""}`}
+        >
+          <p style={{
+            fontFamily: "system-ui, sans-serif",
+            fontSize: "10px",
+            letterSpacing: "0.26em",
+            textTransform: "uppercase",
+            color: "#9a8878",
+            marginBottom: "10px",
+          }}>Questions</p>
+          <h2 style={{
+            fontFamily: "'Playfair Display', serif",
+            fontSize: "clamp(32px, 6vw, 52px)",
+            fontWeight: 400,
+            color: "#1a1a1a",
+            marginBottom: "36px",
+          }}>
+            Need to know
+          </h2>
+
+          <div className="faq-item">
+            <p className="faq-q">What is the dress code?</p>
+            <p className="faq-a">
+              Blue Ties — Semi-formal cocktail attire. Gentlemen are encouraged to wear blue ties.
+            </p>
+          </div>
+
+          <div className="faq-item">
+            <p className="faq-q">Do you have a gift registry?</p>
+            <p className="faq-a">
+              Your presence is the greatest gift! If you&apos;d like to honor us with something, we are registered at{" "}
+              <a
+                href="https://www.target.com/gift-registry/gift-giver?registryId=3db2c510-174e-11f1-8c28-17903ce32dc5&type=WEDDING"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Target
+              </a>.
+            </p>
+          </div>
+
+          <div className="faq-item" style={{ borderBottom: "1px solid #d4c5b0" }}>
+            <p className="faq-q">What time should I arrive?</p>
+            <p className="faq-a">
+              Please arrive by 11:00 AM so you can be comfortably seated by 11:30 AM. The ceremony begins promptly at noon.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  LIGHTBOX */}
+      <Lightbox
+        photos={PHOTOS}
+        index={lightboxIndex}
+        onClose={() => setLightboxIndex(null)}
+        onPrev={() => setLightboxIndex((i) => (i > 0 ? i - 1 : PHOTOS.length - 1))}
+        onNext={() => setLightboxIndex((i) => (i < PHOTOS.length - 1 ? i + 1 : 0))}
+      />
 
       {/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  FLOATING RSVP + MODAL */}
       <button
         className="fab-rsvp"
         onClick={() => setRsvpOpen(true)}
+        aria-label="Open RSVP form"
+        style={{
+          opacity: fabHidden ? 0 : 1,
+          pointerEvents: fabHidden ? "none" : "auto",
+          transition: "opacity 0.3s ease, transform 320ms cubic-bezier(.2,.8,.2,1), box-shadow 320ms ease",
+        }}
       >
         RSVP
       </button>
       <RSVPModal open={rsvpOpen} onClose={() => setRsvpOpen(false)} />
 
       {/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  FOOTER */}
-      <footer style={{
+      <footer ref={footerRef} style={{
         textAlign: "center",
         padding: "52px 20px",
         borderTop: "1px solid #d4c5b0",
