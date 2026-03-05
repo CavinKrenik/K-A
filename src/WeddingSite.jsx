@@ -728,9 +728,11 @@ const CSS = `
     letter-spacing: 0.1em;
   }
   @media (max-width: 640px) {
-    .lightbox-btn { width: 40px; height: 40px; font-size: 16px; }
-    .lightbox-prev { left: 8px; }
-    .lightbox-next { right: 8px; }
+    .lightbox-img { max-width: 72vw; }
+    .lightbox-btn { width: 36px; height: 36px; font-size: 16px; z-index: 2; }
+    .lightbox-prev { left: 6px; }
+    .lightbox-next { right: 6px; }
+    .cal-row { justify-content: center; }
   }
 
   /* ── FAQ ── */
@@ -1667,7 +1669,7 @@ export default function WeddingSite() {
               marginTop: "14px",
               lineHeight: 1.5,
             }}>Arrive by 11:00 AM · Seated by 11:30 AM</p>
-            <div style={{ display: "flex", gap: "10px", flexWrap: "wrap", marginTop: "18px", alignItems: "center" }}>
+            <div className="cal-row" style={{ display: "flex", gap: "10px", flexWrap: "wrap", marginTop: "18px", alignItems: "center" }}>
               <AddToCalendar />
               <a
                 href="https://maps.google.com/?q=Capital+Christian+Center,+4431+Martin+Way+E,+Olympia,+WA+98516"
