@@ -235,7 +235,7 @@ const CSS = `
     align-items: center;
     justify-content: center;
     text-align: center;
-    padding: 80px 28px 60px;
+    padding: 60px 28px 60px;
     position: relative;
     overflow: hidden;
   }
@@ -280,13 +280,14 @@ const CSS = `
   .hero-amp {
     display: block;
     font-family: 'Playfair Display', 'Times New Roman', serif;
-    font-style: normal;
-    font-weight: 500;
-    font-size: 0.44em;
-    letter-spacing: 0.18em;
-    text-indent: 0.18em;
+    font-style: italic;
+    font-weight: 400;
+    font-size: 0.28em;
+    letter-spacing: 0.12em;
+    text-indent: 0.12em;
     color: var(--dusty-rose);
-    margin: 0.14em 0;
+    opacity: 0.6;
+    margin: 0.08em 0;
     text-align: center;
     line-height: 0.9;
     position: relative;
@@ -295,17 +296,18 @@ const CSS = `
   }
   .hero-date {
     font-family: 'DM Sans', sans-serif;
-    font-size: clamp(14px, 2.8vw, 20px);
+    font-size: clamp(16px, 3vw, 22px);
     color: var(--sage);
-    letter-spacing: 0.14em;
+    letter-spacing: 0.06em;
     font-weight: 500;
+    margin-top: 24px;
     animation: heroFloatIn 1s ease 0.76s both;
   }
   @media (max-width: 480px) {
     .hero-names { line-height: 1.08; letter-spacing: 0.03em; }
     .hero-kyle { padding-right: 0; margin-bottom: 0; }
     .hero-amber { padding-left: 0; margin-top: 0; }
-    .hero-amp { font-size: 0.4em; letter-spacing: 0.16em; text-indent: 0.16em; margin: 0.14em 0; }
+    .hero-amp { font-size: 0.26em; letter-spacing: 0.1em; text-indent: 0.1em; margin: 0.06em 0; }
   }
   .letterbox {
     position: absolute;
@@ -1062,15 +1064,17 @@ export default function WeddingSite() {
         {/* Content */}
         <div style={{ position: "relative", zIndex: 1 }}>
           <p style={{
-            fontFamily: "'DM Sans', sans-serif",
-            fontSize: "10px",
-            letterSpacing: "0.34em",
-            textTransform: "uppercase",
+            fontFamily: "'Playfair Display', serif",
+            fontSize: "13px",
+            letterSpacing: "0.12em",
+            textTransform: "none",
+            fontStyle: "italic",
             color: "#9f8a7a",
-            marginBottom: "28px",
+            opacity: 0.7,
+            marginBottom: "20px",
             animation: "fadeUp 1s ease 0.2s both",
           }}>
-            Join us
+            Join
           </p>
 
           <h1 className="hero-names">
@@ -1083,7 +1087,7 @@ export default function WeddingSite() {
             width: "44px",
             height: "1px",
             background: "#c8b8a2",
-            margin: "30px auto",
+            margin: "24px auto",
           }} />
 
           <p className="hero-date">
@@ -1091,11 +1095,12 @@ export default function WeddingSite() {
           </p>
           <p style={{
             fontFamily: "'DM Sans', sans-serif",
-            fontSize: "10px",
-            letterSpacing: "0.28em",
+            fontSize: "12px",
+            letterSpacing: "0.18em",
             textTransform: "uppercase",
             color: "#9f8a7a",
-            marginTop: "8px",
+            opacity: 0.65,
+            marginTop: "10px",
             animation: "fadeUp 1s ease 0.6s both",
           }}>
             Ceremony begins at noon
