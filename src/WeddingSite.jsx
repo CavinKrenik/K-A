@@ -629,18 +629,6 @@ function NavBar({ scrollY, onRsvpClick }) {
   return (
     <>
       <nav className="nav">
-        <span style={{
-          fontFamily: "'Playfair Display', serif",
-          fontSize: "17px",
-          fontWeight: 400,
-          fontStyle: "italic",
-          color: brandColor,
-          letterSpacing: "0.04em",
-          transition: "color 0.3s",
-        }}>
-          June 6, 2026
-        </span>
-
         {/* Desktop links */}
         <div className="nav-links">
           {["Details", "Gallery"].map((s) => (
