@@ -456,7 +456,6 @@ const CSS = `
   .cal-wrap {
     position: relative;
     display: inline-block;
-    margin-top: 18px;
   }
   .cal-btn {
     display: inline-flex;
@@ -1668,7 +1667,22 @@ export default function WeddingSite() {
               marginTop: "14px",
               lineHeight: 1.5,
             }}>Arrive by 11:00 AM · Seated by 11:30 AM</p>
-            <AddToCalendar />
+            <div style={{ display: "flex", gap: "10px", flexWrap: "wrap", marginTop: "18px", alignItems: "center" }}>
+              <AddToCalendar />
+              <a
+                href="https://maps.google.com/?q=Capital+Christian+Center,+4431+Martin+Way+E,+Olympia,+WA+98516"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="cal-btn"
+                style={{ textDecoration: "none" }}
+              >
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="#6b5d52" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M7 1C4.5 1 2.5 3 2.5 5.5C2.5 9 7 13 7 13C7 13 11.5 9 11.5 5.5C11.5 3 9.5 1 7 1Z" />
+                  <circle cx="7" cy="5.5" r="1.5" />
+                </svg>
+                Directions
+              </a>
+            </div>
           </div>
 
           {/* Contact — full width row on desktop, centered */}
