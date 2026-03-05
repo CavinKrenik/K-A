@@ -8,9 +8,9 @@ const PHOTOS = [
   { src: "/5.jpg" },
   { src: "/4.jpg" },
   { src: "/1.jpg" },
-  { src: "/2.jpg" },
+  { src: "/6.jpg" },
   { src: "/3.jpg", wide: true },
-  { src: "/6.jpg", wide: true },
+  { src: "/2.jpg", wide: true },
 ];
 
 /* ══════════════════════════════════════════════════════════════════
