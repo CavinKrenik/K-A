@@ -114,6 +114,10 @@ const CSS = `
     0%, 100% { transform: translateX(-50%) translateY(0);   opacity: 0.6; }
     50%       { transform: translateX(-50%) translateY(10px); opacity: 1;   }
   }
+  @keyframes scrollFade {
+    0%, 100% { opacity: 0.5; }
+    50%      { opacity: 1; }
+  }
   @keyframes heroFloatIn {
     from { opacity: 0; transform: translateY(14px); }
     to   { opacity: 1; transform: translateY(0); }
@@ -356,7 +360,7 @@ const CSS = `
     position: fixed;
     bottom: 24px;
     left: 50%;
-    transform: translateX(-50%) translateY(20px) scale(0.92);
+    transform: translateX(-50%) scale(1);
     z-index: 300;
     background: rgba(16,16,16,0.92);
     color: #f5f0eb;
@@ -370,39 +374,24 @@ const CSS = `
     cursor: pointer;
     border-radius: 60px;
     box-shadow: 0 8px 40px rgba(0,0,0,0.25);
-    transition: transform 320ms cubic-bezier(.2,.8,.2,1), opacity 350ms ease, box-shadow 320ms ease;
+    transition: transform 320ms cubic-bezier(.2,.8,.2,1), box-shadow 320ms ease;
     -webkit-tap-highlight-color: transparent;
     touch-action: manipulation;
-    opacity: 0;
-    pointer-events: none;
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
   }
   @media (min-width: 640px) {
     .fab-rsvp {
-      left: auto;
-      right: 32px;
       bottom: 32px;
-      transform: translateX(0) translateY(20px) scale(0.92);
       padding: 16px 42px;
       font-size: 15px;
     }
   }
-  .fab-rsvp.visible {
-    opacity: 1;
-    transform: translateX(-50%) translateY(0) scale(1);
-    pointer-events: auto;
-  }
-  @media (min-width: 640px) {
-    .fab-rsvp.visible {
-      transform: translateX(0) translateY(0) scale(1);
-    }
-  }
   .fab-rsvp:hover {
-    transform: translateX(0) translateY(-2px) scale(1.04);
+    transform: translateX(-50%) translateY(-2px) scale(1.04);
     box-shadow: 0 14px 52px rgba(0,0,0,0.32);
   }
-  .fab-rsvp:active { transform: translateX(0) translateY(0) scale(0.98); }
+  .fab-rsvp:active { transform: translateX(-50%) translateY(0) scale(0.98); }
 
   /* ── Glass modal ── */
   .glass-backdrop {
@@ -1000,7 +989,7 @@ export default function WeddingSite() {
   const [detailsRef, detailsVisible] = useInView(0.08);
   const [galleryHeaderRef, galleryHeaderVisible] = useInView(0.1);
   const [rsvpOpen, setRsvpOpen] = useState(false);
-  const showFab = scrollY > window.innerHeight * 0.5;
+
 
   const detail = {
     fontFamily: "system-ui, sans-serif",
@@ -1096,16 +1085,33 @@ export default function WeddingSite() {
         {/* Scroll cue */}
         <div style={{
           position: "absolute",
-          bottom: "52px",
+          bottom: "48px",
           left: "50%",
-          animation: "chevron 2.4s ease infinite",
+          transform: "translateX(-50%)",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          gap: "10px",
           pointerEvents: "none",
+          animation: "scrollFade 2.8s ease infinite",
         }}>
+          <p style={{
+            fontFamily: "'DM Sans', sans-serif",
+            fontSize: "9px",
+            letterSpacing: "0.28em",
+            textTransform: "uppercase",
+            color: "#9a8878",
+          }}>
+            Scroll
+          </p>
           <div style={{
             width: "1px",
-            height: "46px",
-            background: "linear-gradient(to bottom, transparent, #9a8878)",
+            height: "36px",
+            background: "linear-gradient(to bottom, #9a8878, transparent)",
           }} />
+          <svg width="12" height="8" viewBox="0 0 12 8" fill="none" style={{ opacity: 0.7 }}>
+            <path d="M1 1L6 6L11 1" stroke="#9a8878" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
         </div>
       </section>
 
@@ -1201,7 +1207,7 @@ export default function WeddingSite() {
 
       {/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  FLOATING RSVP + MODAL */}
       <button
-        className={`fab-rsvp${showFab ? " visible" : ""}`}
+        className="fab-rsvp"
         onClick={() => setRsvpOpen(true)}
       >
         RSVP
