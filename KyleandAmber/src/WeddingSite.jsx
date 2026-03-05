@@ -78,7 +78,15 @@ function useInView(threshold = 0.12) {
    GLOBAL STYLES  (mobile-first, then ≥640 tablet, ≥1024 desktop)
 ══════════════════════════════════════════════════════════════════ */
 const CSS = `
-  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,700;1,400;1,500&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=Playfair+Display:ital,wght@0,400;0,500;0,700;1,400;1,500&display=swap');
+
+  :root {
+    --champagne: #f6f1ea;
+    --ink: #241d19;
+    --dusty-rose: #b99793;
+    --sage: #7d8b77;
+    --muted: #7a685a;
+  }
 
   *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -89,7 +97,7 @@ const CSS = `
   }
 
   body {
-    background: #f5f0eb;
+    background: var(--champagne);
     overscroll-behavior-y: none;
     overflow-x: hidden;
   }
@@ -112,17 +120,17 @@ const CSS = `
     0%, 100% { transform: translateX(-50%) translateY(0);   opacity: 0.6; }
     50%       { transform: translateX(-50%) translateY(10px); opacity: 1;   }
   }
-  @keyframes kyleSlide {
-    from { transform: translateX(65%); opacity: 0; }
-    to   { transform: translateX(0);   opacity: 1; }
+  @keyframes heroFloatIn {
+    from { opacity: 0; transform: translateY(14px); }
+    to   { opacity: 1; transform: translateY(0); }
   }
-  @keyframes amberSlide {
-    from { transform: translateX(-65%); opacity: 0; }
-    to   { transform: translateX(0);    opacity: 1; }
+  @keyframes kyleSweep {
+    from { opacity: 0; transform: translateX(42%); }
+    to   { opacity: 1; transform: translateX(0); }
   }
-  @keyframes ampPop {
-    from { opacity: 0; transform: scale(0.7); }
-    to   { opacity: 1; transform: scale(1);   }
+  @keyframes amberSweep {
+    from { opacity: 0; transform: translateX(-42%); }
+    to   { opacity: 1; transform: translateX(0); }
   }
   @keyframes grain {
     0%   { transform: translate(0%,    0%); }
@@ -238,50 +246,72 @@ const CSS = `
     overflow: hidden;
   }
   .hero-names {
-    font-family: 'Playfair Display', serif;
-    font-weight: 400;
-    font-size: clamp(36px, 12vw, 120px);
-    line-height: 0.88;
-    color: #1a1a1a;
-    width: min(92vw, 860px);
+    font-family: 'Playfair Display', 'Times New Roman', serif;
+    font-weight: 500;
+    font-size: clamp(42px, 12vw, 120px);
+    line-height: 1.03;
+    letter-spacing: 0.02em;
+    color: var(--ink);
+    width: min(84vw, 740px);
     position: relative;
+    display: grid;
+    grid-template-columns: 1fr;
+    justify-items: center;
     isolation: isolate;
   }
   .hero-kyle {
     display: block;
-    text-align: left;
+    width: 100%;
+    font-family: 'Playfair Display', 'Times New Roman', serif;
+    text-align: center;
+    padding-right: 0;
+    margin-bottom: 0.02em;
     position: relative;
     z-index: 1;
-    animation: kyleSlide 1.1s cubic-bezier(.22,.8,.22,1) 0.5s both;
+    font-style: normal;
+    animation: kyleSweep 1.15s cubic-bezier(.22,.8,.24,1) 0.36s both;
   }
   .hero-amber {
     display: block;
-    text-align: right;
+    width: 100%;
+    font-family: 'Playfair Display', 'Times New Roman', serif;
+    text-align: center;
+    padding-left: 0;
+    margin-top: 0.02em;
     position: relative;
     z-index: 1;
-    animation: amberSlide 1.1s cubic-bezier(.22,.8,.22,1) 0.65s both;
+    font-style: normal;
+    animation: amberSweep 1.15s cubic-bezier(.22,.8,.24,1) 0.48s both;
   }
   .hero-amp {
     display: block;
-    font-family: 'Playfair Display', serif;
-    font-style: italic;
-    font-weight: 400;
-    font-size: 0.62em;
-    letter-spacing: 0.08em;
-    color: #b8a088;
-    margin: -2px 0;
+    font-family: 'Playfair Display', 'Times New Roman', serif;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 0.44em;
+    letter-spacing: 0.18em;
+    text-indent: 0.18em;
+    color: var(--dusty-rose);
+    margin: 0.14em 0;
     text-align: center;
+    line-height: 0.9;
     position: relative;
     z-index: 2;
-    animation: ampPop 0.7s cubic-bezier(.34,1.56,.64,1) 0.25s both;
+    animation: heroFloatIn 0.8s cubic-bezier(.22,.78,.24,1) 0.28s both;
   }
   .hero-date {
-    font-family: 'Playfair Display', serif;
+    font-family: 'DM Sans', sans-serif;
     font-size: clamp(14px, 2.8vw, 20px);
-    color: #6b5d52;
-    letter-spacing: 0.1em;
-    font-weight: 400;
-    animation: fadeUp 1.1s ease 0.7s both;
+    color: var(--sage);
+    letter-spacing: 0.14em;
+    font-weight: 500;
+    animation: heroFloatIn 1s ease 0.76s both;
+  }
+  @media (max-width: 480px) {
+    .hero-names { line-height: 1.08; letter-spacing: 0.03em; }
+    .hero-kyle { padding-right: 0; margin-bottom: 0; }
+    .hero-amber { padding-left: 0; margin-top: 0; }
+    .hero-amp { font-size: 0.4em; letter-spacing: 0.16em; text-indent: 0.16em; margin: 0.14em 0; }
   }
   .letterbox {
     position: absolute;
@@ -903,11 +933,11 @@ export default function WeddingSite() {
         {/* Content */}
         <div style={{ position: "relative", zIndex: 1 }}>
           <p style={{
-            fontFamily: "system-ui, sans-serif",
+            fontFamily: "'DM Sans', sans-serif",
             fontSize: "10px",
             letterSpacing: "0.34em",
             textTransform: "uppercase",
-            color: "#9a8878",
+            color: "#9f8a7a",
             marginBottom: "28px",
             animation: "fadeUp 1s ease 0.2s both",
           }}>
