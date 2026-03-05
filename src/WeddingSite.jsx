@@ -1669,7 +1669,7 @@ export default function WeddingSite() {
               marginTop: "14px",
               lineHeight: 1.5,
             }}>Arrive by 11:00 AM · Seated by 11:30 AM</p>
-            <div className="cal-row" style={{ display: "flex", gap: "10px", flexWrap: "wrap", marginTop: "18px", alignItems: "center" }}>
+            <div className="cal-row" style={{ display: "flex", gap: "10px", flexWrap: "wrap", marginTop: "18px", alignItems: "center", justifyContent: "center" }}>
               <AddToCalendar />
               <a
                 href="https://maps.google.com/?q=Capital+Christian+Center,+4431+Martin+Way+E,+Olympia,+WA+98516"
