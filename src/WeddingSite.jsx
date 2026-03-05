@@ -1184,16 +1184,6 @@ export default function WeddingSite() {
         </div>
       </section>
 
-      {/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  ORNAMENT */}
-      <div style={{ textAlign: "center", padding: "8px 0 16px" }}>
-        <span style={{
-          fontFamily: "'Playfair Display', serif",
-          fontSize: "22px",
-          color: "#c8b8a2",
-          fontStyle: "italic",
-        }}>✦</span>
-      </div>
-
       {/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  GALLERY */}
       <section id="gallery" style={{ padding: "0 16px 100px", maxWidth: "1100px", margin: "0 auto" }}>
         <div
