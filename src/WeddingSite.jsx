@@ -3,20 +3,14 @@ import { useEffect, useRef, useState } from "react";
 
 /* ══════════════════════════════════════════════════════════════════
    PHOTOS
-   Once you have real photos, replace the gradient placeholders:
-
-   import p1 from "./assets/photo1.jpeg";
-   import p2 from "./assets/photo2.jpeg";
-   const PHOTOS = [{ src: p1 }, { src: p2 }, ...];
-
-   Until then, the warm gradient tiles below look intentional and
-   beautiful on every device.
 ══════════════════════════════════════════════════════════════════ */
 const PHOTOS = [
-  { gradient: "linear-gradient(140deg,#e8d5c0 0%,#c9a98a 55%,#7a5040 100%)" },
-  { gradient: "linear-gradient(155deg,#d4c5b0 0%,#b8958a 50%,#6a4840 100%)" },
-  { gradient: "linear-gradient(125deg,#e0d0be 0%,#bfa080 52%,#685038 100%)" },
-  { gradient: "linear-gradient(148deg,#dcc8b0 0%,#c4a078 48%,#704838 100%)" },
+  { src: "/1.jpg" },
+  { src: "/2.jpg" },
+  { src: "/3.jpg" },
+  { src: "/4.jpg" },
+  { src: "/5.jpg" },
+  { src: "/6.jpg" },
 ];
 
 /* ══════════════════════════════════════════════════════════════════
@@ -352,6 +346,116 @@ const CSS = `
     .photo-wide { grid-column: span 2; }
   }
 
+  /* ── Apple-style photo reveal ── */
+  .photo-card {
+    overflow: hidden;
+    border-radius: 2px;
+    position: relative;
+    box-shadow: 0 14px 44px rgba(0,0,0,0.1);
+    will-change: transform, opacity;
+  }
+  .photo-card img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    filter: contrast(1.02) saturate(0.9);
+  }
+
+  /* ── Floating RSVP button ── */
+  .fab-rsvp {
+    position: fixed;
+    bottom: 28px;
+    right: 28px;
+    z-index: 300;
+    background: #101010;
+    color: #f5f0eb;
+    border: 1px solid rgba(255,255,255,0.08);
+    padding: 16px 28px;
+    font-family: system-ui, sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    cursor: pointer;
+    border-radius: 60px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.22);
+    transition: transform 260ms cubic-bezier(.2,.8,.2,1), opacity 300ms ease, box-shadow 260ms ease;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+    opacity: 0;
+    transform: translateY(20px) scale(0.92);
+    pointer-events: none;
+  }
+  .fab-rsvp.visible {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    pointer-events: auto;
+  }
+  .fab-rsvp:hover {
+    transform: translateY(-2px) scale(1.04);
+    box-shadow: 0 14px 44px rgba(0,0,0,0.28);
+  }
+  .fab-rsvp:active { transform: translateY(0) scale(0.98); }
+
+  /* ── Glass modal ── */
+  .glass-backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 400;
+    background: rgba(36,29,25,0.35);
+    backdrop-filter: blur(20px) saturate(1.4);
+    -webkit-backdrop-filter: blur(20px) saturate(1.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    opacity: 0;
+    transition: opacity 0.35s ease;
+    pointer-events: none;
+  }
+  .glass-backdrop.open {
+    opacity: 1;
+    pointer-events: auto;
+  }
+  .glass-card {
+    background: rgba(245,240,235,0.82);
+    backdrop-filter: blur(32px) saturate(1.5);
+    -webkit-backdrop-filter: blur(32px) saturate(1.5);
+    border: 1px solid rgba(200,184,162,0.4);
+    border-radius: 18px;
+    padding: 44px 32px 40px;
+    max-width: 500px;
+    width: 100%;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 24px 80px rgba(0,0,0,0.18), 0 0 0 1px rgba(255,255,255,0.12) inset;
+    transform: translateY(24px) scale(0.96);
+    transition: transform 0.4s cubic-bezier(.2,.8,.2,1), opacity 0.35s ease;
+    opacity: 0;
+  }
+  .glass-backdrop.open .glass-card {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
+  .glass-close {
+    position: absolute;
+    top: 16px;
+    right: 20px;
+    background: none;
+    border: none;
+    font-size: 22px;
+    color: #9a8878;
+    cursor: pointer;
+    padding: 8px;
+    line-height: 1;
+    transition: color 0.2s;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .glass-close:hover { color: #1a1a1a; }
+  @media (min-width: 640px) {
+    .glass-card { padding: 52px 44px 48px; }
+  }
+
   /* ── RSVP form ── */
   .rsvp-wrap {
     max-width: 540px;
@@ -476,7 +580,7 @@ function FilmOverlay() {
 /* ══════════════════════════════════════════════════════════════════
    NAV BAR
 ══════════════════════════════════════════════════════════════════ */
-function NavBar({ scrollY }) {
+function NavBar({ scrollY, onRsvpClick }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const scrolled = scrollY > 60;
 
@@ -521,9 +625,10 @@ function NavBar({ scrollY }) {
 
         {/* Desktop links */}
         <div className="nav-links">
-          {["Details", "Gallery", "RSVP"].map((s) => (
+          {["Details", "Gallery"].map((s) => (
             <a key={s} href={`#${s.toLowerCase()}`} style={link}>{s}</a>
           ))}
+          <a key="RSVP" href="#" onClick={(e) => { e.preventDefault(); onRsvpClick(); }} style={link}>RSVP</a>
         </div>
 
         {/* Mobile hamburger */}
@@ -540,7 +645,7 @@ function NavBar({ scrollY }) {
 
       {/* Mobile fullscreen menu */}
       <div className={`mobile-menu${menuOpen ? " open" : ""}`}>
-        {["Details", "Gallery", "RSVP"].map((s, i) => (
+        {["Details", "Gallery"].map((s, i) => (
           <a
             key={s}
             href={`#${s.toLowerCase()}`}
@@ -554,6 +659,18 @@ function NavBar({ scrollY }) {
             {s}
           </a>
         ))}
+        <a
+          key="RSVP"
+          href="#"
+          onClick={(e) => { e.preventDefault(); setMenuOpen(false); onRsvpClick(); }}
+          style={{
+            opacity: menuOpen ? 1 : 0,
+            transform: menuOpen ? "translateY(0)" : "translateY(14px)",
+            transition: `opacity 0.35s ease ${0.08 + 2 * 0.07}s, transform 0.35s ease ${0.08 + 2 * 0.07}s`,
+          }}
+        >
+          RSVP
+        </a>
         <div style={{
           width: 40, height: 1, background: "#c8b8a2",
           margin: "20px 0 10px",
@@ -577,82 +694,69 @@ function NavBar({ scrollY }) {
 }
 
 /* ══════════════════════════════════════════════════════════════════
-   PHOTO CARD  (parallax on desktop, fade-in everywhere)
+   PHOTO CARD  (Apple-style scroll reveal with parallax)
 ══════════════════════════════════════════════════════════════════ */
 function PhotoCard({ photo, index }) {
-  const [cardRef, visible] = useInView(0.1);
-  const imgRef = useRef(null);
-  const [offset, setOffset] = useState(0);
+  const cardRef = useRef(null);
+  const [style, setStyle] = useState({ opacity: 0, transform: "scale(1.08) translateY(40px)" });
 
   useEffect(() => {
-    if (!photo.src || window.innerWidth < 768) return;
-    const handle = () => {
-      const el = imgRef.current;
-      if (!el) return;
+    const el = cardRef.current;
+    if (!el) return;
+
+    const update = () => {
       const rect = el.getBoundingClientRect();
-      const center = rect.top + rect.height / 2 - window.innerHeight / 2;
-      setOffset(center * 0.11);
+      const vh = window.innerHeight;
+      // progress: 0 = just entering bottom, 1 = fully in view
+      const progress = Math.min(Math.max((vh - rect.top) / (vh * 0.6), 0), 1);
+      // ease-out cubic
+      const eased = 1 - Math.pow(1 - progress, 3);
+
+      const scale = 1.08 - 0.08 * eased;
+      const translateY = 40 * (1 - eased);
+      const opacity = eased;
+
+      // parallax offset for images
+      const center = rect.top + rect.height / 2 - vh / 2;
+      const parallax = center * 0.08;
+
+      setStyle({
+        opacity,
+        transform: `scale(${scale}) translateY(${translateY}px)`,
+        parallax,
+      });
     };
-    window.addEventListener("scroll", handle, { passive: true });
-    handle();
-    return () => window.removeEventListener("scroll", handle);
-  }, [photo.src]);
+
+    window.addEventListener("scroll", update, { passive: true });
+    update();
+    return () => window.removeEventListener("scroll", update);
+  }, []);
 
   const isWide = index % 3 === 0;
 
   return (
     <figure
       ref={cardRef}
-      className={`reveal${visible ? " in" : ""}${isWide ? " photo-wide" : ""}`}
+      className={`photo-card${isWide ? " photo-wide" : ""}`}
       style={{
-        overflow: "hidden",
-        borderRadius: "2px",
         aspectRatio: isWide ? "16/8" : "4/5",
-        position: "relative",
-        background: photo.gradient || "#e8ddd3",
-        boxShadow: "0 14px 44px rgba(0,0,0,0.1)",
-        transitionDelay: `${index * 0.07}s`,
+        opacity: style.opacity,
+        transform: style.transform,
+        transition: "transform 0.05s linear, opacity 0.05s linear",
       }}
     >
-      {photo.src ? (
-        <div ref={imgRef} style={{ width: "100%", height: "100%", overflow: "hidden" }}>
-          <img
-            src={photo.src}
-            alt={`Kyle and Amber — memory ${index + 1}`}
-            loading="lazy"
-            style={{
-              width: "100%",
-              height: "120%",
-              objectFit: "cover",
-              display: "block",
-              transform: `translateY(${offset}px)`,
-              transition: "transform 0.06s linear",
-              filter: "contrast(1.02) saturate(0.9)",
-            }}
-          />
-        </div>
-      ) : (
-        /* Gradient placeholder — swap with real photo when ready */
-        <div style={{
-          width: "100%",
-          height: "100%",
-          background: photo.gradient,
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-        }}>
-          <span style={{
-            fontFamily: "'Playfair Display', serif",
-            fontSize: "12px",
-            color: "rgba(255,255,255,0.42)",
-            letterSpacing: "0.22em",
-            textTransform: "uppercase",
-            fontStyle: "italic",
-          }}>
-            photo coming soon
-          </span>
-        </div>
-      )}
+      <div style={{ width: "100%", height: "100%", overflow: "hidden" }}>
+        <img
+          src={photo.src}
+          alt=""
+          loading="lazy"
+          style={{
+            height: "120%",
+            transform: `translateY(${style.parallax || 0}px)`,
+            transition: "transform 0.06s linear",
+          }}
+        />
+      </div>
       {/* Bottom vignette */}
       <div style={{
         position: "absolute",
@@ -665,13 +769,18 @@ function PhotoCard({ photo, index }) {
 }
 
 /* ══════════════════════════════════════════════════════════════════
-   RSVP FORM  (Netlify)
+   RSVP MODAL  (Netlify — glass blur overlay)
 ══════════════════════════════════════════════════════════════════ */
-function RSVPForm() {
-  const [sectionRef, visible] = useInView(0.08);
+function RSVPModal({ open, onClose }) {
   const [form, setForm] = useState({ name: "", guests: "1", attending: "yes", note: "" });
   const [sent, setSent] = useState(false);
   const [loading, setLoading] = useState(false);
+
+  // Lock body scroll while open
+  useEffect(() => {
+    document.body.style.overflow = open ? "hidden" : "";
+    return () => { document.body.style.overflow = ""; };
+  }, [open]);
 
   const set = (k) => (e) => setForm((f) => ({ ...f, [k]: e.target.value }));
 
@@ -716,8 +825,13 @@ function RSVPForm() {
   };
 
   return (
-    <section id="rsvp" ref={sectionRef}>
-      <div className={`rsvp-wrap reveal${visible ? " in" : ""}`}>
+    <div
+      className={`glass-backdrop${open ? " open" : ""}`}
+      onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}
+    >
+      <div className="glass-card" style={{ position: "relative" }}>
+        <button className="glass-close" onClick={onClose} aria-label="Close RSVP">&times;</button>
+
         <p style={{
           fontFamily: "system-ui, sans-serif",
           fontSize: "10px",
@@ -731,17 +845,17 @@ function RSVPForm() {
 
         <h2 style={{
           fontFamily: "'Playfair Display', serif",
-          fontSize: "clamp(38px, 9vw, 58px)",
+          fontSize: "clamp(30px, 7vw, 44px)",
           fontWeight: 400,
           lineHeight: 1.05,
           color: "#1a1a1a",
-          marginBottom: "52px",
+          marginBottom: "36px",
         }}>
           Will you join us?
         </h2>
 
         {sent ? (
-          <div style={{ textAlign: "center", padding: "52px 0 20px" }}>
+          <div style={{ textAlign: "center", padding: "32px 0 10px" }}>
             <div style={{
               width: "56px",
               height: "56px",
@@ -777,7 +891,7 @@ function RSVPForm() {
             method="POST"
             data-netlify="true"
             onSubmit={handleSubmit}
-            style={{ display: "flex", flexDirection: "column", gap: "36px" }}
+            style={{ display: "flex", flexDirection: "column", gap: "28px" }}
           >
             <input type="hidden" name="form-name" value="rsvp" />
 
@@ -872,7 +986,7 @@ function RSVPForm() {
           </form>
         )}
       </div>
-    </section>
+    </div>
   );
 }
 
@@ -883,6 +997,8 @@ export default function WeddingSite() {
   const scrollY = useSmoothScrollY();
   const [detailsRef, detailsVisible] = useInView(0.08);
   const [galleryHeaderRef, galleryHeaderVisible] = useInView(0.1);
+  const [rsvpOpen, setRsvpOpen] = useState(false);
+  const showFab = scrollY > window.innerHeight * 0.5;
 
   const detail = {
     fontFamily: "system-ui, sans-serif",
@@ -902,7 +1018,7 @@ export default function WeddingSite() {
     }}>
       <style>{CSS}</style>
       <FilmOverlay />
-      <NavBar scrollY={scrollY} />
+      <NavBar scrollY={scrollY} onRsvpClick={() => setRsvpOpen(true)} />
 
       {/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  HERO */}
       <section className="hero">
@@ -958,7 +1074,7 @@ export default function WeddingSite() {
           }} />
 
           <p className="hero-date">
-            Date · Venue
+            June 6th, 2026 · Starts at Noon
           </p>
         </div>
 
@@ -985,8 +1101,8 @@ export default function WeddingSite() {
           className={`details-grid reveal${detailsVisible ? " in" : ""}`}
         >
           {[
-            { label: "Ceremony",  l1: "Time TBD",            l2: "Venue TBD",        l3: "Location" },
-            { label: "Reception", l1: "Time TBD",            l2: "Venue TBD",        l3: "Cocktails & Dancing" },
+            { label: "Ceremony",  l1: "June 6th, 2026 — Noon",  l2: "Capital Christian Center",  l3: "4431 Martin Way E, Olympia, WA 98516" },
+            { label: "Contact",   l1: "kyleandamberwedding2026@gmail.com",  l2: "Kyle (360) 763-2293",  l3: "Amber (360) 995-2926" },
             { label: "Attire",    l1: "Black Tie Optional",  l2: "Florals Welcome",  l3: "" },
           ].map(({ label, l1, l2, l3 }) => (
             <div key={label} style={{
@@ -1057,9 +1173,14 @@ export default function WeddingSite() {
         </div>
       </section>
 
-      {/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  RSVP */}
-      <div style={{ borderTop: "1px solid #d4c5b0", margin: "0 20px" }} />
-      <RSVPForm />
+      {/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  FLOATING RSVP + MODAL */}
+      <button
+        className={`fab-rsvp${showFab ? " visible" : ""}`}
+        onClick={() => setRsvpOpen(true)}
+      >
+        RSVP
+      </button>
+      <RSVPModal open={rsvpOpen} onClose={() => setRsvpOpen(false)} />
 
       {/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  FOOTER */}
       <footer style={{
@@ -1084,7 +1205,7 @@ export default function WeddingSite() {
           letterSpacing: "0.16em",
           textTransform: "uppercase",
         }}>
-          Date · Location
+          June 6th, 2026 · Capital Christian Center, Olympia, WA
         </p>
       </footer>
     </div>
