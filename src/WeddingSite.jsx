@@ -1089,7 +1089,7 @@ function PhotoCard({ photo, index, onClick }) {
    RSVP MODAL  (Netlify — glass blur overlay)
 ══════════════════════════════════════════════════════════════════ */
 function RSVPModal({ open, onClose }) {
-  const [form, setForm] = useState({ name: "", guests: "1", attending: "yes", note: "", guestNames: [] });
+  const [form, setForm] = useState({ name: "", guests: "1", attending: "yes", note: "", guestNames: [], reception: "1" });
   const [sent, setSent] = useState(false);
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState({});
@@ -1156,6 +1156,7 @@ function RSVPModal({ open, onClose }) {
       name: form.name,
       attending: form.attending,
       guests: form.attending === "yes" ? form.guests : "0",
+      "reception-guests": form.attending === "yes" ? form.reception : "0",
       note: form.note,
     };
     if (form.attending === "yes") {
@@ -1371,6 +1372,22 @@ function RSVPModal({ open, onClose }) {
                     {errors[`guest-${i}`] && <p className="error-msg">Please enter this guest&apos;s name</p>}
                   </div>
                 ))}
+
+                <div style={{ marginTop: "12px" }}>
+                  <label htmlFor="rsvp-reception" style={labelStyle}>Reception Dinner Attendance</label>
+                  <select
+                    id="rsvp-reception"
+                    name="reception-guests"
+                    style={{ ...inputBase, cursor: "pointer", paddingRight: "20px" }}
+                    value={form.reception}
+                    onChange={set("reception")}
+                  >
+                    <option value="0">Will not attend dinner</option>
+                    {[1, 2, 3, 4, 5, 6, 7, 8].map((n) => (
+                      <option key={`rec-${n}`} value={n}>{n} attending dinner</option>
+                    ))}
+                  </select>
+                </div>
               </>
             )}
 
@@ -1853,10 +1870,17 @@ export default function WeddingSite() {
             </p>
           </div>
 
-          <div className="faq-item" style={{ borderBottom: "1px solid #d4c5b0" }}>
+          <div className="faq-item">
             <p className="faq-q">What time should I arrive?</p>
             <p className="faq-a">
               Please arrive by 11:00 AM so you can be comfortably seated by 11:30 AM. The ceremony begins promptly at noon.
+            </p>
+          </div>
+
+          <div className="faq-item" style={{ borderBottom: "1px solid #d4c5b0" }}>
+            <p className="faq-q">Is there a reception after the ceremony?</p>
+            <p className="faq-a">
+              Yes! A catered reception dinner will immediately follow the service at the same venue. Please let us know if you'll be joining us via the RSVP form below.
             </p>
           </div>
         </div>
