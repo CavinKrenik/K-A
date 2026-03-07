@@ -421,11 +421,7 @@ const CSS = `
 
   /* ── Floating RSVP button ── */
   .fab-rsvp {
-    position: fixed;
-    bottom: 24px;
-    left: 50%;
-    transform: translateX(-50%) scale(1);
-    z-index: 300;
+    /* Position handles by the wrapper div now */
     background: rgba(16,16,16,0.92);
     color: #f5f0eb;
     border: 1px solid rgba(255,255,255,0.1);
@@ -446,16 +442,15 @@ const CSS = `
   }
   @media (min-width: 640px) {
     .fab-rsvp {
-      bottom: 32px;
       padding: 16px 42px;
       font-size: 15px;
     }
   }
   .fab-rsvp:hover {
-    transform: translateX(-50%) translateY(-2px) scale(1.04);
+    transform: translateY(-2px) scale(1.04) !important;
     box-shadow: 0 14px 52px rgba(0,0,0,0.32);
   }
-  .fab-rsvp:active { transform: translateX(-50%) translateY(0) scale(0.98); }
+  .fab-rsvp:active { transform: translateY(0) scale(0.98) !important; }
 
   /* ── Glass modal ── */
   .glass-backdrop {
@@ -1560,18 +1555,36 @@ export default function WeddingSite() {
   const [lightboxIndex, setLightboxIndex] = useState(null);
   const [faqRef, faqVisible] = useInView(0.08);
   const footerRef = useRef(null);
-  const [fabHidden, setFabHidden] = useState(false);
+  const rsvpContainerRef = useRef(null);
+  const [fabBottomOffset, setFabBottomOffset] = useState(0);
 
-  // Hide FAB when footer is in view
+  // Stop FAB above the footer
   useEffect(() => {
-    const el = footerRef.current;
-    if (!el) return;
-    const obs = new IntersectionObserver(
-      ([e]) => setFabHidden(e.isIntersecting),
-      { threshold: 0.1 }
-    );
-    obs.observe(el);
-    return () => obs.disconnect();
+    const footerEl = footerRef.current;
+    if (!footerEl) return;
+
+    const updateFabPosition = () => {
+      const footerRect = footerEl.getBoundingClientRect();
+      const vh = window.innerHeight;
+
+      // If the top of the footer is above the bottom of the viewport
+      if (footerRect.top < vh) {
+        // Switch to absolute positioning anchored above the footer
+        setFabBottomOffset(vh - footerRect.top);
+      } else {
+        // Keep it fixed at the bottom
+        setFabBottomOffset(0);
+      }
+    };
+
+    window.addEventListener("scroll", updateFabPosition, { passive: true });
+    window.addEventListener("resize", updateFabPosition, { passive: true });
+    updateFabPosition();
+
+    return () => {
+      window.removeEventListener("scroll", updateFabPosition);
+      window.removeEventListener("resize", updateFabPosition);
+    };
   }, []);
 
 
@@ -1896,18 +1909,32 @@ export default function WeddingSite() {
       />
 
       {/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  FLOATING RSVP + MODAL */}
-      <button
-        className="fab-rsvp"
-        onClick={() => setRsvpOpen(true)}
-        aria-label="Open RSVP form"
+      <div
+        ref={rsvpContainerRef}
         style={{
-          opacity: fabHidden ? 0 : 1,
-          pointerEvents: fabHidden ? "none" : "auto",
-          transition: "opacity 0.3s ease, transform 320ms cubic-bezier(.2,.8,.2,1), box-shadow 320ms ease",
+          position: fabBottomOffset > 0 ? "absolute" : "fixed",
+          bottom: fabBottomOffset > 0 ? `${fabBottomOffset + 24}px` : "24px",
+          left: "50%",
+          transform: "translateX(-50%)",
+          zIndex: 300,
+          transition: fabBottomOffset > 0 ? "none" : "bottom 0.1s linear"
         }}
       >
-        RSVP
-      </button>
+        <button
+          className="fab-rsvp"
+          onClick={() => setRsvpOpen(true)}
+          aria-label="Open RSVP form"
+          style={{
+            position: "static", // Override the fixed position in CSS
+            transform: "none",  // Override the translateX(-50%) in CSS
+            bottom: "auto",
+            left: "auto",
+            transition: "transform 320ms cubic-bezier(.2,.8,.2,1), box-shadow 320ms ease",
+          }}
+        >
+          RSVP
+        </button>
+      </div>
       <RSVPModal open={rsvpOpen} onClose={() => setRsvpOpen(false)} />
 
       {/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  FOOTER */}
