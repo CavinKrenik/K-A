@@ -892,7 +892,7 @@ function FilmOverlay() {
 /* ══════════════════════════════════════════════════════════════════
    NAV BAR
 ══════════════════════════════════════════════════════════════════ */
-function NavBar({ scrollY, onRsvpClick }) {
+function NavBar({ scrollY, onRsvpClick, playingMusic, toggleMusic }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const scrolled = scrollY > 60;
 
@@ -930,18 +930,78 @@ function NavBar({ scrollY, onRsvpClick }) {
           ))}
           <a key="Registry" href="https://www.target.com/gift-registry/gift-giver?registryId=3db2c510-174e-11f1-8c28-17903ce32dc5&type=WEDDING" target="_blank" rel="noopener noreferrer" style={link}>Registry</a>
           <a key="RSVP" href="#" onClick={(e) => { e.preventDefault(); onRsvpClick(); }} style={link}>RSVP</a>
+          {/* Music Toggle - Desktop */}
+          <button
+            onClick={toggleMusic}
+            aria-label={playingMusic ? "Pause background music" : "Play background music"}
+            style={{
+              background: "none",
+              border: "none",
+              cursor: "pointer",
+              display: "flex",
+              alignItems: "center",
+              color: "#6b5d52",
+              padding: "0",
+              marginLeft: "12px",
+              transition: "color 0.3s",
+            }}
+          >
+            {playingMusic ? (
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                <rect x="6" y="4" width="4" height="16"></rect>
+                <rect x="14" y="4" width="4" height="16"></rect>
+              </svg>
+            ) : (
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                <line x1="19" y1="5" x2="5" y2="19"></line>
+              </svg>
+            )}
+          </button>
         </div>
 
-        {/* Mobile hamburger */}
-        <button
-          className={`nav-hamburger${menuOpen ? " open" : ""}`}
-          onClick={() => setMenuOpen((o) => !o)}
-          aria-label={menuOpen ? "Close menu" : "Open menu"}
-        >
-          <span style={{ background: barColor }} />
-          <span style={{ background: barColor }} />
-          <span style={{ background: barColor }} />
-        </button>
+        {/* Mobile controls */}
+        <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
+          {/* Music Toggle - Mobile */}
+          <button
+            className="mobile-music-toggle"
+            onClick={toggleMusic}
+            aria-label={playingMusic ? "Pause background music" : "Play background music"}
+            style={{
+              background: "none",
+              border: "none",
+              cursor: "pointer",
+              display: "flex",
+              alignItems: "center",
+              color: "#1a1a1a",
+              padding: "8px",
+              zIndex: 201
+            }}
+          >
+            {playingMusic ? (
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                <rect x="6" y="4" width="4" height="16"></rect>
+                <rect x="14" y="4" width="4" height="16"></rect>
+              </svg>
+            ) : (
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                <line x1="19" y1="5" x2="5" y2="19"></line>
+              </svg>
+            )}
+          </button>
+
+          {/* Mobile hamburger */}
+          <button
+            className={`nav-hamburger${menuOpen ? " open" : ""}`}
+            onClick={() => setMenuOpen((o) => !o)}
+            aria-label={menuOpen ? "Close menu" : "Open menu"}
+          >
+            <span style={{ background: barColor }} />
+            <span style={{ background: barColor }} />
+            <span style={{ background: barColor }} />
+          </button>
+        </div>
       </nav>
 
       {/* Mobile fullscreen menu */}
@@ -1554,6 +1614,57 @@ export default function WeddingSite() {
   const [rsvpOpen, setRsvpOpen] = useState(false);
   const [lightboxIndex, setLightboxIndex] = useState(null);
   const [faqRef, faqVisible] = useInView(0.08);
+
+  const [playingMusic, setPlayingMusic] = useState(false);
+  const audioRef = useRef(null);
+
+  // Initialize and handle global audio play on first interaction 
+  // (browsers block autoplay without interaction)
+  useEffect(() => {
+    audioRef.current = new Audio("/bkgmusic.mp3");
+    audioRef.current.loop = true;
+    audioRef.current.volume = 0.45; // slightly lower volume for background
+
+    // We can't autoplay right away without a user interaction.
+    // Try to start playing once they interact with the page anywhere.
+    const startAudio = () => {
+      if (audioRef.current && !playingMusic) {
+        audioRef.current.play()
+          .then(() => setPlayingMusic(true))
+          .catch(() => { /* handled by browser policy usually */ });
+        document.removeEventListener('click', startAudio);
+        document.removeEventListener('touchstart', startAudio);
+        document.removeEventListener('scroll', startAudio, { passive: true });
+      }
+    };
+
+    document.addEventListener('click', startAudio);
+    document.addEventListener('touchstart', startAudio);
+    document.addEventListener('scroll', startAudio, { passive: true });
+
+    return () => {
+      document.removeEventListener('click', startAudio);
+      document.removeEventListener('touchstart', startAudio);
+      document.removeEventListener('scroll', startAudio);
+      if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current = null;
+      }
+    };
+  }, []);
+
+  const toggleMusic = () => {
+    if (!audioRef.current) return;
+
+    if (playingMusic) {
+      audioRef.current.pause();
+      setPlayingMusic(false);
+    } else {
+      audioRef.current.play()
+        .then(() => setPlayingMusic(true))
+        .catch(console.error);
+    }
+  };
   const footerRef = useRef(null);
 
 
@@ -1574,7 +1685,12 @@ export default function WeddingSite() {
     }}>
       <style>{CSS}</style>
       <FilmOverlay />
-      <NavBar scrollY={scrollY} onRsvpClick={() => setRsvpOpen(true)} />
+      <NavBar
+        scrollY={scrollY}
+        onRsvpClick={() => setRsvpOpen(true)}
+        playingMusic={playingMusic}
+        toggleMusic={toggleMusic}
+      />
 
       {/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  HERO */}
       <section className="hero">
