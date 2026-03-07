@@ -1880,7 +1880,7 @@ export default function WeddingSite() {
           <div className="faq-item" style={{ borderBottom: "1px solid #d4c5b0" }}>
             <p className="faq-q">Is there a reception after the ceremony?</p>
             <p className="faq-a">
-              Yes! A catered reception dinner will immediately follow the service at the same venue. Please let us know if you'll be joining us via the RSVP form below.
+              Yes! A catered reception dinner will immediately follow the service at the same venue. Please click the black RSVP button below to let us know if you'll be joining us and to provide a headcount for dinner.
             </p>
           </div>
         </div>
