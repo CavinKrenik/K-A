@@ -1040,7 +1040,7 @@ function PhotoCard({ photo, index, onClick }) {
 
       setStyle({
         opacity,
-        transform: `scale(${scale}) translateY(${translateY}px)`,
+        transform: `scale(${scale}) translateY(${translateY}px) translateZ(0)`,
         parallax,
       });
     };
@@ -1059,7 +1059,8 @@ function PhotoCard({ photo, index, onClick }) {
       style={{
         opacity: style.opacity,
         transform: style.transform,
-        transition: "transform 0.05s linear, opacity 0.05s linear",
+        WebkitTransform: style.transform,
+        transition: "transform 0.05s linear, -webkit-transform 0.05s linear, opacity 0.05s linear",
         cursor: onClick ? "pointer" : "default",
       }}
       onClick={onClick}
@@ -1634,7 +1635,8 @@ export default function WeddingSite() {
           width: "min(50vw, 460px)", height: "min(50vw, 460px)",
           borderRadius: "50%",
           background: "radial-gradient(circle, rgba(200,184,162,0.2) 0%, transparent 70%)",
-          transform: `translateY(${scrollY * 0.07}px)`,
+          transform: `translateY(${scrollY * 0.07}px) translateZ(0)`,
+          WebkitTransform: `translateY(${scrollY * 0.07}px) translateZ(0)`,
           pointerEvents: "none",
         }} />
         <div style={{
@@ -1643,7 +1645,8 @@ export default function WeddingSite() {
           width: "min(42vw, 380px)", height: "min(42vw, 380px)",
           borderRadius: "50%",
           background: "radial-gradient(circle, rgba(180,156,130,0.16) 0%, transparent 70%)",
-          transform: `translateY(${scrollY * -0.05}px)`,
+          transform: `translateY(${scrollY * -0.05}px) translateZ(0)`,
+          WebkitTransform: `translateY(${scrollY * -0.05}px) translateZ(0)`,
           pointerEvents: "none",
         }} />
 
