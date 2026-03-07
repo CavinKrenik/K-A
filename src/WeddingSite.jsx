@@ -1555,37 +1555,6 @@ export default function WeddingSite() {
   const [lightboxIndex, setLightboxIndex] = useState(null);
   const [faqRef, faqVisible] = useInView(0.08);
   const footerRef = useRef(null);
-  const rsvpContainerRef = useRef(null);
-  const [fabBottomOffset, setFabBottomOffset] = useState(0);
-
-  // Stop FAB above the footer
-  useEffect(() => {
-    const footerEl = footerRef.current;
-    if (!footerEl) return;
-
-    const updateFabPosition = () => {
-      const footerRect = footerEl.getBoundingClientRect();
-      const vh = window.innerHeight;
-
-      // If the top of the footer is above the bottom of the viewport
-      if (footerRect.top < vh) {
-        // Switch to absolute positioning anchored above the footer
-        setFabBottomOffset(vh - footerRect.top);
-      } else {
-        // Keep it fixed at the bottom
-        setFabBottomOffset(0);
-      }
-    };
-
-    window.addEventListener("scroll", updateFabPosition, { passive: true });
-    window.addEventListener("resize", updateFabPosition, { passive: true });
-    updateFabPosition();
-
-    return () => {
-      window.removeEventListener("scroll", updateFabPosition);
-      window.removeEventListener("resize", updateFabPosition);
-    };
-  }, []);
 
 
   const detail = {
@@ -1601,7 +1570,6 @@ export default function WeddingSite() {
     <div style={{
       background: "#f5f0eb",
       minHeight: "100vh",
-      overflowX: "hidden",
       fontFamily: "system-ui, sans-serif",
     }}>
       <style>{CSS}</style>
@@ -1910,14 +1878,15 @@ export default function WeddingSite() {
 
       {/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  FLOATING RSVP + MODAL */}
       <div
-        ref={rsvpContainerRef}
         style={{
-          position: fabBottomOffset > 0 ? "absolute" : "fixed",
-          bottom: fabBottomOffset > 0 ? `${fabBottomOffset + 24}px` : "24px",
-          left: "50%",
-          transform: "translateX(-50%)",
+          position: "sticky",
+          bottom: "24px",
+          display: "flex",
+          justifyContent: "center",
           zIndex: 300,
-          transition: fabBottomOffset > 0 ? "none" : "bottom 0.1s linear"
+          pointerEvents: "none",
+          paddingBottom: "40px",
+          marginTop: "-20px"
         }}
       >
         <button
@@ -1925,11 +1894,7 @@ export default function WeddingSite() {
           onClick={() => setRsvpOpen(true)}
           aria-label="Open RSVP form"
           style={{
-            position: "static", // Override the fixed position in CSS
-            transform: "none",  // Override the translateX(-50%) in CSS
-            bottom: "auto",
-            left: "auto",
-            transition: "transform 320ms cubic-bezier(.2,.8,.2,1), box-shadow 320ms ease",
+            pointerEvents: "auto",
           }}
         >
           RSVP
@@ -1938,7 +1903,7 @@ export default function WeddingSite() {
       <RSVPModal open={rsvpOpen} onClose={() => setRsvpOpen(false)} />
 
       {/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  FOOTER */}
-      <footer ref={footerRef} style={{
+      <footer style={{
         textAlign: "center",
         padding: "52px 20px",
         borderTop: "1px solid #d4c5b0",
