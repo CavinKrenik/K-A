@@ -9,8 +9,10 @@ const PHOTOS = [
   { src: "/4.jpg" },
   { src: "/1.jpg" },
   { src: "/6.jpg" },
-  { src: "/3.jpg", wide: true },
-  { src: "/2.jpg", wide: true },
+  { src: "/7.jpg" },
+  { src: "/8.jpg" },
+  { src: "/3.jpg" },
+  { src: "/2.jpg" },
 ];
 
 /* ══════════════════════════════════════════════════════════════════
@@ -226,7 +228,7 @@ const CSS = `
   }
 
   /* Desktop links */
-  .nav-links { display: none; gap: 28px; }
+  .nav-links { display: none; gap: 28px; align-items: center; }
   .nav-links a:hover { color: #1a1a1a !important; }
 
   /* Hamburger button — mobile only */
@@ -285,6 +287,43 @@ const CSS = `
     transition: color 0.2s;
   }
   .mobile-menu a:hover { color: #9a8878; }
+
+  /* Registry dropdown — desktop */
+  .registry-dropdown { position: relative; cursor: default; }
+  .registry-dropdown > span { cursor: default; }
+  .registry-drop-panel {
+    position: absolute;
+    top: calc(100% + 12px);
+    left: 50%;
+    transform: translateX(-50%) translateY(-6px);
+    background: rgba(248,245,241,0.97);
+    backdrop-filter: blur(18px);
+    border-radius: 10px;
+    padding: 6px 0;
+    min-width: 148px;
+    box-shadow: 0 6px 28px rgba(0,0,0,0.09);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.22s ease, transform 0.22s ease;
+  }
+  .registry-dropdown:hover .registry-drop-panel {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateX(-50%) translateY(0);
+  }
+  .registry-drop-panel a {
+    display: block;
+    padding: 9px 22px;
+    text-align: center;
+    font-family: system-ui, sans-serif;
+    font-size: 10px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    text-decoration: none;
+    color: #6b5d52;
+    transition: color 0.2s;
+  }
+  .registry-drop-panel a:hover { color: #1a1a1a; }
 
   @media (min-width: 768px) {
     .nav { padding: 18px 40px; }
@@ -402,6 +441,108 @@ const CSS = `
   .photo-wide { grid-column: span 1; }
   @media (min-width: 560px) {
     .photo-wide { grid-column: span 2; }
+  }
+
+  /* ── Gallery flip card ── */
+  .gallery-flip-wrap {
+    perspective: 1200px;
+    cursor: pointer;
+    max-width: 560px;
+    margin: 0 auto;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+  }
+  .gallery-flip-wrap:focus-visible {
+    outline: 2px solid var(--dusty-rose);
+    outline-offset: 4px;
+    border-radius: 20px;
+  }
+  .gallery-flip-inner {
+    position: relative;
+    transform-style: preserve-3d;
+    transition: transform 0.8s cubic-bezier(.2,.8,.2,1);
+    border-radius: 20px;
+  }
+  @media (hover: hover) {
+    .gallery-flip-wrap:hover .gallery-flip-inner { transform: rotateY(180deg); }
+  }
+  .gallery-flip-front, .gallery-flip-back {
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    border-radius: 20px;
+  }
+  .gallery-flip-front {
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 14px 44px rgba(0,0,0,0.1);
+  }
+  .gallery-flip-front img {
+    width: 100%;
+    display: block;
+    filter: contrast(1.02) saturate(0.92);
+  }
+  .gallery-flip-hint {
+    position: absolute;
+    bottom: 22px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    background: rgba(245,240,235,0.88);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-radius: 40px;
+    padding: 9px 22px;
+    font-family: system-ui, sans-serif;
+    font-size: 10px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: #6b5d52;
+    white-space: nowrap;
+    pointer-events: none;
+  }
+  @media (hover: hover) { .gallery-flip-hint { display: none; } }
+  .gallery-flip-back {
+    position: absolute;
+    inset: 0;
+    transform: rotateY(180deg);
+    background: var(--champagne);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    box-shadow: 0 14px 44px rgba(0,0,0,0.1);
+    padding: 40px;
+    text-align: center;
+  }
+  .gallery-back-eyebrow {
+    font-family: system-ui, sans-serif;
+    font-size: 10px;
+    letter-spacing: 0.26em;
+    text-transform: uppercase;
+    color: #9a8878;
+  }
+  .gallery-back-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(28px, 5vw, 44px);
+    font-weight: 400;
+    color: #1a1a1a;
+  }
+  .gallery-back-count {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    color: #9a8878;
+    letter-spacing: 0.1em;
+  }
+  .gallery-back-cta {
+    font-family: system-ui, sans-serif;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: #6b5d52;
+    margin-top: 6px;
   }
 
   /* ── Apple-style photo reveal ── */
@@ -928,7 +1069,13 @@ function NavBar({ scrollY, onRsvpClick }) {
           {["Details", "Gallery", "FAQ"].map((s) => (
             <a key={s} href={`#${s.toLowerCase()}`} style={link}>{s}</a>
           ))}
-          <a key="Registry" href="https://www.target.com/gift-registry/gift-giver?registryId=3db2c510-174e-11f1-8c28-17903ce32dc5&type=WEDDING" target="_blank" rel="noopener noreferrer" style={link}>Registry</a>
+          <div className="registry-dropdown">
+            <span style={link}>Registry</span>
+            <div className="registry-drop-panel">
+              <a href="https://www.target.com/gift-registry/gift-giver?registryId=3db2c510-174e-11f1-8c28-17903ce32dc5&type=WEDDING" target="_blank" rel="noopener noreferrer">Target</a>
+              <a href="https://www.amazon.com/wedding/guest-view/2Y4A987DD32G7" target="_blank" rel="noopener noreferrer">Amazon</a>
+            </div>
+          </div>
           <a key="RSVP" href="#" onClick={(e) => { e.preventDefault(); onRsvpClick(); }} style={link}>RSVP</a>
         </div>
 
@@ -964,7 +1111,7 @@ function NavBar({ scrollY, onRsvpClick }) {
           </a>
         ))}
         <a
-          key="Registry"
+          key="RegistryTarget"
           href="https://www.target.com/gift-registry/gift-giver?registryId=3db2c510-174e-11f1-8c28-17903ce32dc5&type=WEDDING"
           target="_blank"
           rel="noopener noreferrer"
@@ -975,7 +1122,21 @@ function NavBar({ scrollY, onRsvpClick }) {
             transition: `opacity 0.35s ease ${0.08 + 3 * 0.07}s, transform 0.35s ease ${0.08 + 3 * 0.07}s`,
           }}
         >
-          Registry
+          Target Registry
+        </a>
+        <a
+          key="RegistryAmazon"
+          href="https://www.amazon.com/wedding/guest-view/2Y4A987DD32G7"
+          target="_blank"
+          rel="noopener noreferrer"
+          onClick={() => setMenuOpen(false)}
+          style={{
+            opacity: menuOpen ? 1 : 0,
+            transform: menuOpen ? "translateY(0)" : "translateY(14px)",
+            transition: `opacity 0.35s ease ${0.08 + 3.7 * 0.07}s, transform 0.35s ease ${0.08 + 3.7 * 0.07}s`,
+          }}
+        >
+          Amazon Registry
         </a>
         <a
           key="RSVP"
@@ -984,7 +1145,7 @@ function NavBar({ scrollY, onRsvpClick }) {
           style={{
             opacity: menuOpen ? 1 : 0,
             transform: menuOpen ? "translateY(0)" : "translateY(14px)",
-            transition: `opacity 0.35s ease ${0.08 + 4 * 0.07}s, transform 0.35s ease ${0.08 + 4 * 0.07}s`,
+            transition: `opacity 0.35s ease ${0.08 + 4.7 * 0.07}s, transform 0.35s ease ${0.08 + 4.7 * 0.07}s`,
           }}
         >
           RSVP
@@ -1012,75 +1173,40 @@ function NavBar({ scrollY, onRsvpClick }) {
 }
 
 /* ══════════════════════════════════════════════════════════════════
-   PHOTO CARD  (Apple-style scroll reveal with parallax)
+   GALLERY FLIP CARD
 ══════════════════════════════════════════════════════════════════ */
-function PhotoCard({ photo, index, onClick }) {
-  const cardRef = useRef(null);
-  const [style, setStyle] = useState({ opacity: 0, transform: "scale(1.08) translateY(40px)" });
-
-  useEffect(() => {
-    const el = cardRef.current;
-    if (!el) return;
-
-    const update = () => {
-      const rect = el.getBoundingClientRect();
-      const vh = window.innerHeight;
-      // progress: 0 = just entering bottom, 1 = fully in view
-      const progress = Math.min(Math.max((vh - rect.top) / (vh * 0.6), 0), 1);
-      // ease-out cubic
-      const eased = 1 - Math.pow(1 - progress, 3);
-
-      const scale = 1.08 - 0.08 * eased;
-      const translateY = 40 * (1 - eased);
-      const opacity = eased;
-
-      // parallax offset for images
-      const center = rect.top + rect.height / 2 - vh / 2;
-      const parallax = center * 0.08;
-
-      setStyle({
-        opacity,
-        transform: `scale(${scale}) translateY(${translateY}px) translateZ(0)`,
-        parallax,
-      });
-    };
-
-    window.addEventListener("scroll", update, { passive: true });
-    update();
-    return () => window.removeEventListener("scroll", update);
-  }, []);
-
-  const isWide = !!photo.wide;
-
+function GalleryCard({ photoCount, onOpen }) {
   return (
-    <figure
-      ref={cardRef}
-      className={`photo-card${isWide ? " photo-wide" : ""}`}
-      style={{
-        opacity: style.opacity,
-        transform: style.transform,
-        WebkitTransform: style.transform,
-        transition: "transform 0.05s linear, -webkit-transform 0.05s linear, opacity 0.05s linear",
-        cursor: onClick ? "pointer" : "default",
-      }}
-      onClick={onClick}
-      role={onClick ? "button" : undefined}
-      tabIndex={onClick ? 0 : undefined}
-      onKeyDown={onClick ? (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); onClick(); } } : undefined}
+    <div
+      className="gallery-flip-wrap"
+      onClick={() => onOpen(0)}
+      role="button"
+      tabIndex={0}
+      aria-label={`View gallery of ${photoCount} photos`}
+      onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); onOpen(0); } }}
     >
-      <img
-        src={photo.src}
-        alt={`Wedding photo ${index + 1}`}
-        loading="lazy"
-      />
-      {/* Bottom vignette */}
-      <div style={{
-        position: "absolute",
-        inset: 0,
-        background: "linear-gradient(to top, rgba(0,0,0,0.18) 0%, transparent 40%)",
-        pointerEvents: "none",
-      }} />
-    </figure>
+      <div className="gallery-flip-inner">
+        {/* Front */}
+        <div className="gallery-flip-front">
+          <img src="/galleryimage.png" alt="Our photo gallery" loading="lazy" />
+          <div className="gallery-flip-hint">
+            <svg width="11" height="11" viewBox="0 0 11 11" fill="none">
+              <circle cx="5.5" cy="5.5" r="4.2" stroke="currentColor" strokeWidth="1.1" />
+              <circle cx="5.5" cy="5.5" r="1.5" fill="currentColor" />
+            </svg>
+            View Gallery
+          </div>
+        </div>
+        {/* Back — desktop hover */}
+        <div className="gallery-flip-back">
+          <p className="gallery-back-eyebrow">Our Story</p>
+          <InfinityFlourish />
+          <p className="gallery-back-title">A Few Memories</p>
+          <p className="gallery-back-count">{photoCount} photographs</p>
+          <span className="gallery-back-cta">Open Gallery →</span>
+        </div>
+      </div>
+    </div>
   );
 }
 
@@ -1851,11 +1977,7 @@ export default function WeddingSite() {
           </h2>
         </div>
 
-        <div className="photo-grid">
-          {PHOTOS.map((photo, i) => (
-            <PhotoCard key={i} photo={photo} index={i} onClick={() => setLightboxIndex(i)} />
-          ))}
-        </div>
+        <GalleryCard photoCount={PHOTOS.length} onOpen={(i) => setLightboxIndex(i)} />
       </section>
 
       {/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  FAQ */}
@@ -1899,6 +2021,13 @@ export default function WeddingSite() {
                 rel="noopener noreferrer"
               >
                 Target
+              </a>{" "}and{" "}
+              <a
+                href="https://www.amazon.com/wedding/guest-view/2Y4A987DD32G7"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Amazon
               </a>.
             </p>
           </div>
