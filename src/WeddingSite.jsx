@@ -289,7 +289,7 @@ const CSS = `
   .mobile-menu a:hover { color: #9a8878; }
 
   /* Registry dropdown — desktop */
-  .registry-dropdown { position: relative; cursor: default; }
+  .registry-dropdown { position: relative; cursor: default; display: inline-flex; align-items: center; }
   .registry-dropdown > span { cursor: default; }
   .registry-drop-panel {
     position: absolute;
